@@ -5,7 +5,7 @@ from wtforms import TextField, BooleanField, TextAreaField,\
 
 from wtforms.validators import Required, Email, EqualTo, Length
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from app.main.models import User
+from app.main.models import User, Project
 
 #from wtforms_alchemy import ModelForm
 from app import bcrypt
@@ -65,3 +65,33 @@ class UserForm(Form):
             )
             return False
         return True
+
+
+class ProjectForm(Form):
+    name = TextField('name', validators=[
+        Length(min=1, max=64),
+        Required()])
+    url = TextField('url', validators=[
+        Length(min=1, max=64),
+        Required()])
+    student_points = TextField('student_points')
+    info = TextField('info', validators=[Length(min=1, max=5012), Required()])
+    picture = TextField('textfield')
+
+    def __init__(self, original_url, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        self.original_url = original_url
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        if self.url.data == self.original_url:
+            return True
+        project_url = Project.query.filter_by(url=self.url.data).first()
+        if project_url is not None:
+            self.url.errors.append(
+                'This url is already in use. Please choose another one.'
+            )
+            return False
+        return True
+

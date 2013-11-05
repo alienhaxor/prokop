@@ -46,6 +46,15 @@ class User(db.Model):
         }
 
 
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True)
+    url = db.Column(db.String(64), index=True)
+    student_points = db.Column(db.Integer)
+    info = db.Column(db.String(5012))
+    picture = db.Column(db.String)
+
+
 def dump_datetime(value):
     """Deserialize datetime object into string form for JSON processing."""
     if value is None:
