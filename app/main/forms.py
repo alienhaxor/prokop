@@ -1,18 +1,40 @@
 from flask.ext.wtf import Form
 
 from wtforms import TextField, BooleanField, TextAreaField,\
-    RadioField, PasswordField, DecimalField
+    RadioField, PasswordField, DecimalField, form, fields, validators
 
 from wtforms.validators import Required, Email, EqualTo, Length
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from app.main.models import User, Project
 
-from wtforms_alchemy import ModelForm
+#from wtforms_alchemy import ModelForm
+from app import bcrypt
 
 
-class LoginForm(Form):
-    email = TextField('Email address', [Required(), Email()])
-    passwd = PasswordField('Password', [Required()])
+class LoginForm(form.Form):
+    email = fields.TextField(validators=[validators.required()])
+    password = fields.PasswordField(validators=[validators.required()])
+
+    def validate_login(self, field):
+        user = self.get_user()
+
+        if user is None:
+            raise validators.ValidationError('Invalid email or password')
+
+        if not bcrypt.check_password_hash(user.password, self.password.data):
+            raise validators.ValidationError('Invalid email or password')
+
+    def get_user(self):
+        return User.query.filter_by(email=self.email.data).first()
+
+
+class RegistrationForm(form.Form):
+    email = fields.TextField(validators=[validators.required()])
+    password = fields.PasswordField(validators=[validators.required()])
+
+    def validate_login(self, field):
+        if (User.query.filter_by(url=self.url.data).first()):
+            raise validators.ValidationError('Duplicate username')
 
 
 # edit user.

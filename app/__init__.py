@@ -9,8 +9,11 @@ import redis
 
 from flask import render_template
 
+from flask.ext.bcrypt import Bcrypt
+
 app = Flask(__name__)
 #red = redis.Redis("localhost")
+bcrypt = Bcrypt(app)
 
 app.debug = True
 
