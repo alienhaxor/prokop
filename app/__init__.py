@@ -7,10 +7,16 @@ from flask.ext.login import LoginManager
 from config import basedir
 import redis
 
+from flask.ext.restful import Api
+
 from flask import render_template
+
+from flask.ext.bcrypt import Bcrypt
 
 app = Flask(__name__)
 #red = redis.Redis("localhost")
+bcrypt = Bcrypt(app)
+api = Api(app)
 
 app.debug = True
 
