@@ -20,9 +20,11 @@ main = Blueprint('main', __name__, template_folder='../templates/main/')
 def index():
     return 'hello2'
 
-@main.route('/hi')
-def hi():
-    return 'hi'
+
+@main.route('/users/')
+def get_users():
+    return title
+
 
 @main.route('/login/', methods=['GET', 'POST'])
 def login():
