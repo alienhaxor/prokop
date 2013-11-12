@@ -60,12 +60,12 @@ class ProjectListAPI(Resource):
         super(ProjectListAPI, self).__init__()
 
     def get(self):
-        #return jsonify(Projects=[i.serialize for i in Project.query.all()])
-        return {"task": {
-                "description": "", "done": 'false',
-                "id": 3, "title": "Read a book"
-                }
-                }
+        return jsonify(Projects=[i.serialize for i in Project.query.all()])
+        #return {"task": {
+        #        "description": "", "done": 'false',
+        #        "id": 3, "title": "Read a book"
+        #        }
+        #        }
 
     def post(self):
         args = self.reqparse.parse_args()
