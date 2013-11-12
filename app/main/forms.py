@@ -13,7 +13,7 @@ from app import bcrypt
 
 class LoginForm(form.Form):
     email = fields.TextField(validators=[validators.required()])
-    password = fields.PasswordField(validators=[validators.required()])
+    passwd = fields.PasswordField(validators=[validators.required()])
 
     def validate_login(self, field):
         user = self.get_user()
@@ -30,7 +30,7 @@ class LoginForm(form.Form):
 
 class RegistrationForm(form.Form):
     email = fields.TextField(validators=[validators.required()])
-    password = fields.PasswordField(validators=[validators.required()])
+    passwd = fields.PasswordField(validators=[validators.required()])
 
     def validate_login(self, field):
         if (User.query.filter_by(url=self.url.data).first()):
