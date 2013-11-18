@@ -1,55 +1,47 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Backbone Cellar</title>
-<link rel="stylesheet" href="{{
-  url_for('static', filename='css/styles.css') }}"/>
-</head>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Backbone.js Library</title>
+        <script rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}"></script>
+    </head>
+    <body>
 
-<body>
+        <script id="bookTemplate" type="text/template">
+            <img src="<%= coverImage %>"/>
+            <ul>
+                <li><%= name %></li>
+                <li><%= info %></li>
+                <li><%= $.format.date( new Date( releaseDate ), 'MMMM yyyy' ) %></li>
+            </ul>
 
-<div id="header"><span class="title">Backbone Cellar</span></div>
+            <button class="delete">Delete</button>
+        </script>
 
-<div id="sidebar"></div>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+        <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+        <script src="https://rawgithub.com/phstc/jquery-dateFormat/master/jquery.dateFormat-1.0.js"></script>
+        
+        <script type=text/javascript src="{{url_for('static', filename='js/models/book.js') }}"></script>
+        <script type=text/javascript src="{{url_for('static', filename='js/collections/library.js') }}"></script>
+        <script type=text/javascript src="{{url_for('static', filename='js/views/book.js') }}"></script>
+        <script type=text/javascript src="{{url_for('static', filename='js/views/library.js') }}"></script>
+        <script type=text/javascript src="{{url_for('static', filename='js/app.js') }}"></script>
 
-<div id="content">
-<h2>Welcome to Backbone Cellar</h2>
-<p>
-This is a sample application part of of three-part tutorial showing how to build a CRUD application with Backbone.js.
-</p>
-</div>
+        <div id="books">
 
-<!-- Templates -->
-<script type="text/template" id="tpl-wine-list-item">
-        <a href='#wines/<%= id %>'><%= name %></a>
-</script>
+            <form id="addBook" action="#">
+                <div>
+                    <label for="coverImage">CoverImage: </label><input id="coverImage" type="file" />
+                    <label for="name">Name: </label><input id="name" type="text" />
+                    <label for="info">Info: </label><input id="info" type="text" />
+                    <label for="releaseDate">Release date: </label><input id="releaseDate" type="text" />
+                    <button id="add">Add</button>
+                </div>
+            </form>
 
-<script type="text/template" id="tpl-wine-details">
-    <div class="form-left-col">
-        <label>Id:</label>
-        <input type="text" id="wineId" name="id" value="<%= id %>" disabled />
-        <label>Name:</label>
-        <input type="text" id="name" name="name" value="<%= name %>" required/>
-    </div>
-    <div class="form-right-col">
-        <label>Notes:</label>
-        <textarea id="description" name="description"><%= description %></textarea>
-    </div>
-</script>
+        </div>
 
-<!-- JavaScript -->
-<script type=text/javascript src="{{
-  url_for('static', filename='lib/jquery-1.7.1.min.js') }}"></script>
-
-<script type=text/javascript src="{{
-  url_for('static', filename='lib/underscore-min.js') }}"></script>
-
-<script type=text/javascript src="{{
-  url_for('static', filename='lib/backbone-min.js') }}"></script>
-
-
-<script type=text/javascript src="{{
-  url_for('static', filename='js/main.js') }}"></script>
-
-</body>
+    </body>
 </html>

@@ -60,12 +60,7 @@ class ProjectListAPI(Resource):
         super(ProjectListAPI, self).__init__()
 
     def get(self):
-        return jsonify(Projects=[i.serialize for i in Project.query.all()])
-        #return {"task": {
-        #        "description": "", "done": 'false',
-        #        "id": 3, "title": "Read a book"
-        #        }
-        #        }
+        return jsonify(Projects=[i.serialize for i in Project.query.all()])        
 
     def post(self):
         args = self.reqparse.parse_args()
@@ -89,7 +84,7 @@ class ProjectAPI(Resource):
         project = Project.query.get(int(id))
         if not project:
             abort(404)
-        return jsonify(Project=[project.serialize])
+        return jsonify(Projects=[project.serialize])
 
     def put(self, id):
         project = Project.query.get(int(id))
@@ -111,8 +106,8 @@ class ProjectAPI(Resource):
         return {'result': True}
 
 
-api.add_resource(ProjectListAPI, '/api/v1.0/projects/', endpoint='projects')
-api.add_resource(ProjectAPI, '/api/v1.0/projects/<int:id>/',
+api.add_resource(ProjectListAPI, '/api/v1.0/projects', endpoint='projects')
+api.add_resource(ProjectAPI, '/api/v1.0/projects/<int:id>',
                  endpoint='project')
 
 

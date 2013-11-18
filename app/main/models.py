@@ -75,7 +75,8 @@ class Project(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'created_at': dump_datetime(self.date_created)
+            'info': self.info,
+            'releaseDate': dump_datetime(self.date_created)
         }
 
 
