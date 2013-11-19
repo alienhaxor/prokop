@@ -1,48 +1,69 @@
 var app = app || {};
 
 app.LibraryView = Backbone.View.extend({
-    el: '#books',
+        el: $( '#books' ),
 
-    initialize: function( initialBooks ) {
-        this.collection = new app.Library();
-        this.collection.fetch({reset: true});
-        this.render();
+        initialize: function() {
+                this.collection = new app.Library();
+                this.collection.fetch();
+                this.render();
 
-        this.listenTo( this.collection, 'add', this.renderBook );
-        this.listenTo( this.collection, 'reset', this.renderBook );
-    },
+                this.listenTo( this.collection, 'add', this.renderBook );
+                this.listenTo( this.collection, 'reset', this.render );
+        },
 
-    // render library by rendering each book in its collection
-    render: function() {
-        this.collection.each(function( item ) {
-            this.renderBook( item );
-        }, this );
-    },
+        events: {
+                'click #add': 'addBook',
+        },
 
-    // render a book by creating a BookView and appending the
-    // element it renders to the library's element
-    renderBook: function( item ) {
-        var bookView = new app.BookView({
-            model: item
-        });
-        this.$el.append( bookView.render().el );
-    },
+        addBook: function( e ) {
+                e.preventDefault();
 
-    events: {
-        'click #add':'addBook'
-    },
+                var formData = {};
 
-    addBook: function(e) {
-        event.preventDefault();
+                var image = new FormData($('form input[id=coverImage]'));
+                console.log($('form input[id=coverImage]').val());
 
-        var formData = {};
+                //can perform client side field required checking for "fileToUpload" field
+                $.ajaxFileUpload({
+                    url:'doajaxfileupload.php',
+                    secureuri:false,
+                    fileElementId:'fileToUpload',
+                    dataType: 'json',
+                    success: function (data, status) {
+                        if(typeof(data.error) != 'undefined') {
+                            if(data.error != '') {
+                                alert(data.error);
+                            } else {
+                                alert(msg); // returns location of uploaded file
+                            }   
+                        }
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                })
 
-        $('#addBook div').children('input').each(function(i, el) {
-            if($(el).val() != '') {
-                formData[el.id] = $(el).val();
-            }
-        });
+                $( '#addBook div' ).children( 'input' ).each( function( i, el ) {
+                    formData[ el.id ] = $( el ).val() || null;
+                });
 
-        this.collection.create(formData);
-    }
+                this.collection.create( formData );
+        },
+
+        // render library by rendering each book in its collection
+        render: function() {
+                this.collection.each(function( item ) {
+                        this.renderBook( item );
+                }, this );
+        },
+
+        // render a book by creating a BookView and appending the
+        // element it renders to the library's element
+        renderBook: function( item ) {
+                var bookView = new app.BookView({
+                        model: item
+                });
+                this.$el.append( bookView.render().el );
+        }
 });

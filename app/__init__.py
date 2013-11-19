@@ -35,7 +35,7 @@ lm.logout_view = 'main.logout'
 lm.login_message = u"Please log in to access this page."
 
 # File Uploads
-#UPLOAD_FOLDER = os.path.join(basedir, '')
+UPLOAD_FOLDER = 'static/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS

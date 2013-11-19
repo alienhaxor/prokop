@@ -3,20 +3,34 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Backbone.js Library</title>
-        <script rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}"></script>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
     </head>
     <body>
 
         <script id="bookTemplate" type="text/template">
             <img src="<%= coverImage %>"/>
             <ul>
-                <li><%= name %></li>
-                <li><%= info %></li>
-                <li><%= $.format.date( new Date( releaseDate ), 'MMMM yyyy' ) %></li>
+                    <li><%= name %></li>
+                    <li><%= info %></li>
+                    <li><%= $.format.date( new Date( releaseDate ), 'd M yyyy' ) %></li>
             </ul>
 
             <button class="delete">Delete</button>
         </script>
+
+        <div id="books">
+
+            <form id="addBook" action="#">
+                <div>
+                    <label for="coverImage">CoverImage: </label><input id="coverImage" type="file" />
+                    <label for="name">Name: </label><input id="name" type="text" />
+                    <label for="Info">Info: </label><input id="Info" type="text" />
+                    <label for="releaseDate">Release date: </label><input id="releaseDate" type="text" />
+                    <button id="add">Add</button>
+                </div>
+            </form>
+
+        </div>
 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
@@ -28,20 +42,6 @@
         <script type=text/javascript src="{{url_for('static', filename='js/views/book.js') }}"></script>
         <script type=text/javascript src="{{url_for('static', filename='js/views/library.js') }}"></script>
         <script type=text/javascript src="{{url_for('static', filename='js/app.js') }}"></script>
-
-        <div id="books">
-
-            <form id="addBook" action="#">
-                <div>
-                    <label for="coverImage">CoverImage: </label><input id="coverImage" type="file" />
-                    <label for="name">Name: </label><input id="name" type="text" />
-                    <label for="info">Info: </label><input id="info" type="text" />
-                    <label for="releaseDate">Release date: </label><input id="releaseDate" type="text" />
-                    <button id="add">Add</button>
-                </div>
-            </form>
-
-        </div>
 
     </body>
 </html>
