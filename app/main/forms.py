@@ -31,6 +31,7 @@ class LoginForm(form.Form):
 class RegistrationForm(form.Form):
     email = fields.TextField(validators=[validators.required()])
     passwd = fields.PasswordField(validators=[validators.required()])
+    name = fields.TextField(validators=[validators.required()])
 
     def validate_login(self, field):
         if (User.query.filter_by(url=self.url.data).first()):

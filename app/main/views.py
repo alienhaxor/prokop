@@ -24,9 +24,12 @@ def index():
     return 'hello2'
 
 
-@main.route('/hi')
-def hi():
-    return 'Welcome!'
+@main.route('/user/<int:id>', methods=['GET'])
+def user(id):
+    user = User.query.get(int(id))
+    if user is None:
+        return 'not_found'
+    return render_template("user_profile.html", user=user)
 
 
 @main.route('/login/', methods=['GET', 'POST'])
@@ -34,8 +37,8 @@ def login():
     """
     Login form
     """
-    #if current_user is not None and current_user.is_authenticated():
-     #   return redirect(url_for('main.home'))
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('main.user/%s' % g.user.name))
     form = LoginForm(request.form)
     # make sure data are valid, but doesn't validate password is right
     if form.validate():
@@ -43,13 +46,18 @@ def login():
         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
             # the session can't be modified as it's signed,
             # it's a safe place to store the user id
-            #session['user_id'] = user.id
+            #session['user_email'] = user.email
             login_user(user)
             #flash('Welcome %s' % user.name)
-            return redirect(url_for('main.hi'))
+            return redirect(url_for('main.user/%s' % g.user.name))
             #return redirect(request.args.get('next') or url_for('main.hi'))
         flash('Wrong email or password', 'error-message')
     return render_template("forms.html", form=form)
+
+
+@main.before_request
+def before_request():
+    g.user = current_user
 
 
 @main.route('/register/', methods=('GET', 'POST'))
@@ -58,7 +66,8 @@ def register_view():
     if form.validate():
 
         user = User(email=form.email.data,
-                    passwd=bcrypt.generate_password_hash(form.passwd.data))
+                    passwd=bcrypt.generate_password_hash(form.passwd.data),
+                    name=form.name.data)
 
         # Insert the record in our database and commit it
         db.session.add(user)
@@ -74,6 +83,7 @@ def register_view():
 @login_required
 def logout():
     logout_user()
+    g.user = None
     flash("Logged out.")
     return redirect(url_for("main.index"))
 
