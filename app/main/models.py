@@ -76,6 +76,7 @@ class Project(db.Model):
             'id': self.id,
             'name': self.name,
             'info': self.info,
+            'picture_url': self.picture_url,
             'releaseDate': dump_datetime(self.date_created)
         }
 

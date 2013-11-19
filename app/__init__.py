@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -35,9 +37,11 @@ lm.logout_view = 'main.logout'
 lm.login_message = u"Please log in to access this page."
 
 # File Uploads
-UPLOAD_FOLDER = 'static/uploads/'
+UPLOAD_FOLDER = os.path.join(basedir, 'app/static/uploads/')
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 

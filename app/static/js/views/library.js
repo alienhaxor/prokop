@@ -21,33 +21,6 @@ app.LibraryView = Backbone.View.extend({
 
                 var formData = {};
 
-                var image = new FormData($('form input[id=coverImage]'));
-                console.log($('form input[id=coverImage]').val());
-
-                //can perform client side field required checking for "fileToUpload" field
-                $.ajaxFileUpload({
-                    url:'doajaxfileupload.php',
-                    secureuri:false,
-                    fileElementId:'fileToUpload',
-                    dataType: 'json',
-                    success: function (data, status) {
-                        if(typeof(data.error) != 'undefined') {
-                            if(data.error != '') {
-                                alert(data.error);
-                            } else {
-                                alert(msg); // returns location of uploaded file
-                            }   
-                        }
-                    },
-                    error: function (data, status, e) {
-                        alert(e);
-                    }
-                })
-
-                $( '#addBook div' ).children( 'input' ).each( function( i, el ) {
-                    formData[ el.id ] = $( el ).val() || null;
-                });
-
                 this.collection.create( formData );
         },
 

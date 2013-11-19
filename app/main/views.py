@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, request, render_template, flash,\
     g, session, redirect, url_for, jsonify, abort, make_response
 
@@ -13,7 +15,9 @@ from flask.ext.restful import Resource, reqparse, fields, marshal
 
 #from werkzeug import check_password_hash, generate_password_hash
 
-from app import db, bcrypt, api
+from werkzeug import secure_filename
+
+from app import app, db, bcrypt, api
 from app.main.models import User, Project
 
 from flask.ext.httpauth import HTTPBasicAuth
@@ -33,17 +37,18 @@ def index():
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return filename
+            return jsonify({"success": True})
+    return 'file upload'
 
 
 @auth.get_password
@@ -75,7 +80,7 @@ class ProjectListAPI(Resource):
         super(ProjectListAPI, self).__init__()
 
     def get(self):
-        return jsonify(Projects=[i.serialize for i in Project.query.all()])        
+        return jsonify(Projects=[i.serialize for i in Project.query.all()])
 
     def post(self):
         args = self.reqparse.parse_args()

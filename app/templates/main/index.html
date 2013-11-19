@@ -3,7 +3,9 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Backbone.js Library</title>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
+
     </head>
     <body>
 
@@ -18,16 +20,24 @@
             <button class="delete">Delete</button>
         </script>
 
-        <div id="books">
-
-            <form id="addBook" action="#">
-                <div>
-                    <label for="coverImage">CoverImage: </label><input id="coverImage" type="file" />
-                    <label for="name">Name: </label><input id="name" type="text" />
-                    <label for="Info">Info: </label><input id="Info" type="text" />
-                    <label for="releaseDate">Release date: </label><input id="releaseDate" type="text" />
-                    <button id="add">Add</button>
+        <div id="books">        
+            <form id="addBook" class="form-inline" role="form" action="#" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="sr-only" for="coverImage">CoverImage: </label>
+                    <!-- <input id="fileupload" class="form-control" type="file" name="files[]" data-url="{{url_for('main.upload_file') }}" multiple> -->
+                    <div id="dropbox">
+                        <span class="message">Drop images here to upload.</span>
+                    </div>
+                <div class="form-group">
+                    <label class="sr-only" for="name">Email address</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name">
                 </div>
+                <div class="form-group">
+                    <label class="sr-only" for="info">Password</label>
+                    <input type="text" class="form-control" id="info" placeholder="Info">
+                </div>
+
+                <button id="add" type="submit" class="btn btn-default">Add</button>
             </form>
 
         </div>
@@ -35,6 +45,7 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
         <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <script src="https://rawgithub.com/phstc/jquery-dateFormat/master/jquery.dateFormat-1.0.js"></script>
         
         <script type=text/javascript src="{{url_for('static', filename='js/models/book.js') }}"></script>
@@ -42,6 +53,9 @@
         <script type=text/javascript src="{{url_for('static', filename='js/views/book.js') }}"></script>
         <script type=text/javascript src="{{url_for('static', filename='js/views/library.js') }}"></script>
         <script type=text/javascript src="{{url_for('static', filename='js/app.js') }}"></script>
+
+        <script type=text/javascript src="{{url_for('static', filename='lib/jquery.filedrop.js') }}"></script>
+        <script type=text/javascript src="{{url_for('static', filename='lib/upload.js') }}"></script>
 
     </body>
 </html>
