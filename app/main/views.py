@@ -20,15 +20,22 @@ main = Blueprint('main', __name__, template_folder='../templates/main/')
 
 
 @main.route('/')
+@login_required
 def index():
     return 'hello2'
 
 
-@main.route('/user/<int:id>', methods=['GET'])
-def user(id):
-    user = User.query.get(int(id))
+@main.route('/test')
+@login_required
+def test():
+    return 'hello3'
+
+
+@main.route('/user/<name>', methods=['GET'])
+def user(name):
+    user = User.query.filter_by(name=name).first()
     if user is None:
-        return 'not_found'
+        return page_not_found(404)
     return render_template("user_profile.html", user=user)
 
 
@@ -38,7 +45,7 @@ def login():
     Login form
     """
     if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('main.user/%s' % g.user.name))
+        return redirect(url_for('main.user', name=g.user.name))
     form = LoginForm(request.form)
     # make sure data are valid, but doesn't validate password is right
     if form.validate():
@@ -46,11 +53,8 @@ def login():
         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
             # the session can't be modified as it's signed,
             # it's a safe place to store the user id
-            #session['user_email'] = user.email
             login_user(user)
-            #flash('Welcome %s' % user.name)
-            return redirect(url_for('main.user/%s' % g.user.name))
-            #return redirect(request.args.get('next') or url_for('main.hi'))
+            return redirect(request.args.get('next') or url_for('main.index'))
         flash('Wrong email or password', 'error-message')
     return render_template("forms.html", form=form)
 
@@ -91,3 +95,17 @@ def logout():
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+# Errors #
+##########
+
+
+@main.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+
+#@main.errorhandler(500)
+#def internal_error(error):
+#    db.session.rollback()
+#   return render_template('500.html'), 500
