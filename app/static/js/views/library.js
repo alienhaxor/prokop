@@ -13,7 +13,8 @@ app.LibraryView = Backbone.View.extend({
         },
 
         events: {
-                'click #add': 'addBook'
+                'click #add': 'addBook',
+                "click input[type=radio]": "onRadioClick"
         },
 
         addBook: function( e ) {
@@ -36,6 +37,23 @@ app.LibraryView = Backbone.View.extend({
                 });
 
                 this.collection.create( formData );
+        },
+
+        onRadioClick: function(e) {
+            var coverImage = $('input:radio[name=coverImageRadios]:checked').val();
+            $.each(StartProject.filesData.items, function() {
+                if (this.file == coverImage) {
+                    this.cover = 1;
+                } else {
+                    this.cover = 0;
+                }
+            });
+
+            var filesDataJson = JSON.stringify(StartProject.filesData);
+            console.log(filesDataJson);
+
+            $('input[name="fileField"]').val(filesDataJson);
+
         },
 
         // render library by rendering each book in its collection

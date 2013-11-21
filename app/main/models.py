@@ -79,8 +79,17 @@ class Project(db.Model):
             'name': self.name,
             'info': self.info,
             'picture_url': self.picture_url,
-            'releaseDate': dump_datetime(self.date_created)
+            'releaseDate': dump_datetime(self.date_created),
+            'images': self.serialize_many2many
         }
+
+    @property
+    def serialize_many2many(self):
+        """
+        Return object's relations in easily serializeable format.
+        NB! Calls many2many's serialize property.
+        """
+        return [project_image.serialize for project_image in self.images]
 
 
 class Role(db.Model):
@@ -100,7 +109,18 @@ class Role(db.Model):
 
 class Project_image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(256))
+    url = db.Column(db.String(256), index=True)
+    cover = db.Column(db.Boolean(), default=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'url': self.url,
+            'cover': self.cover
+        }
 
 
 def dump_datetime(value):

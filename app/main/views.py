@@ -94,6 +94,8 @@ class ProjectListAPI(Resource):
             files = json.loads(fileData)
             for file in files['items']:
                 img = Project_image(url=file['file'])
+                if file['cover'] == 1:
+                    img.cover = True
                 project.images.append(img)
         db.session.commit()
         #return jsonify(Project=[project.serialize()]), 201
