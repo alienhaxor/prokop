@@ -173,16 +173,15 @@ class ProjectPersonAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('name', type=str, default="")
-        self.reqparse.add_argument('role', type=str, default="")
+        self.reqparse.add_argument('role', type=str, default="1")
         super(ProjectPersonAPI, self).__init__()
 
-    def get(self, id):
+    def get(self, id, person_id):
         args = self.reqparse.parse_args()
-        #name = request.args['name']
         #role = request.args['role']
-        name = args['name']
+        person_id = person_id
         role = args['role']
-        return {'name': name, 'role': role}
+        return {'person_id': person_id, 'role': role}
 
     def delete(self, id):
         project = Project.query.get(int(id))
@@ -197,7 +196,7 @@ api.add_resource(ProjectPersonListAPI,
                  '/api/v1.0/projects/<int:id>/persons')
 
 api.add_resource(ProjectPersonAPI,
-                 '/api/v1.0/projects/<int:id>/persons')
+                 '/api/v1.0/projects/<int:id>/persons/<int:person_id>')
 
 
 @main.route('/login/', methods=['GET', 'POST'])
