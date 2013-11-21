@@ -1,4 +1,4 @@
-import os
+import os, json
 
 from flask import Blueprint, request, render_template, flash,\
     g, session, redirect, url_for, jsonify, abort, make_response
@@ -18,7 +18,7 @@ from flask.ext.restful import Resource, reqparse, fields, marshal
 from werkzeug import secure_filename
 
 from app import app, db, bcrypt, api
-from app.main.models import User, Project
+from app.main.models import User, Project, Project_image
 
 from flask.ext.httpauth import HTTPBasicAuth
 
@@ -77,6 +77,9 @@ class ProjectListAPI(Resource):
         self.reqparse.add_argument('info', type=str, default="",
                                    location='json')
 
+        self.reqparse.add_argument('fileField', type=str, default="",
+                                   location='json')
+
         super(ProjectListAPI, self).__init__()
 
     def get(self):
@@ -86,6 +89,12 @@ class ProjectListAPI(Resource):
         args = self.reqparse.parse_args()
         project = Project(name=args['name'], info=args['info'])
         db.session.add(project)
+        fileData = args['fileField']
+        if fileData is not None:
+            files = json.loads(fileData)
+            for file in files['items']:
+                img = Project_image(url=file['file'])
+                project.images.append(img)
         db.session.commit()
         #return jsonify(Project=[project.serialize()]), 201
         return {'result': True}

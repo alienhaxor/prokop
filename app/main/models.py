@@ -55,6 +55,8 @@ class Project(db.Model):
     picture_url = db.Column(db.String)
     active = db.Column(db.Boolean)
     date_created = db.Column(db.DateTime)
+    images = db.relationship('Project_image', backref='project',
+                             lazy='dynamic')
 
     #users = db.relationship('Project', backref='project_role')
 
@@ -94,6 +96,11 @@ class Role(db.Model):
     created_at = db.Column(db.DateTime)
     token = db.relationship("User", backref="project_role")
     #game = db.relationship("Game", backref="token_assocs")
+
+
+class Project_image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(256))
 
 
 def dump_datetime(value):
