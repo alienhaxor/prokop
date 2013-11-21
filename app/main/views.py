@@ -107,7 +107,7 @@ class ProjectAPI(Resource):
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('title', type=str, location='json')
+        self.reqparse.add_argument('name', type=str, location='json')
         self.reqparse.add_argument('info', type=str, location='json')
         super(ProjectAPI, self).__init__()
 
@@ -136,10 +136,68 @@ class ProjectAPI(Resource):
         db.session.commit()
         return {'result': True}
 
+api.add_resource(ProjectListAPI,
+                 '/api/v1.0/projects')
 
-api.add_resource(ProjectListAPI, '/api/v1.0/projects', endpoint='projects')
-api.add_resource(ProjectAPI, '/api/v1.0/projects/<int:id>',
-                 endpoint='project')
+api.add_resource(ProjectAPI,
+                 '/api/v1.0/projects/<int:id>')
+
+
+class ProjectPersonListAPI(Resource):
+    #decorators = [auth.login_required]
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('name', type=str,
+                                   help='No task name provided',
+                                   location='json')
+
+        self.reqparse.add_argument('role', type=str, default="",
+                                   location='json')
+
+        super(ProjectPersonListAPI, self).__init__()
+
+    def get(self):
+        return jsonify(Projects=[i.serialize for i in Project.query.all()])
+
+    def post(self):
+        args = self.reqparse.parse_args()
+        project = Project(name=args['name'], info=args['info'])
+        db.session.add(project)
+        return {'result': True}
+
+
+class ProjectPersonAPI(Resource):
+    #decorators = [auth.login_required]
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('name', type=str, default="")
+        self.reqparse.add_argument('role', type=str, default="")
+        super(ProjectPersonAPI, self).__init__()
+
+    def get(self, id):
+        args = self.reqparse.parse_args()
+        #name = request.args['name']
+        #role = request.args['role']
+        name = args['name']
+        role = args['role']
+        return {'name': name, 'role': role}
+
+    def delete(self, id):
+        project = Project.query.get(int(id))
+        if not project:
+            abort(404)
+        db.session.delete(project)
+        db.session.commit()
+        return {'result': False}
+
+
+api.add_resource(ProjectPersonListAPI,
+                 '/api/v1.0/projects/<int:id>/persons')
+
+api.add_resource(ProjectPersonAPI,
+                 '/api/v1.0/projects/<int:id>/persons')
 
 
 @main.route('/login/', methods=['GET', 'POST'])
