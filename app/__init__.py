@@ -47,7 +47,7 @@ app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 
 toolbar = DebugToolbarExtension(app)
 
-from app.main import models, views
+from app.main import models, views, api
 from app.main.views import main
 
 app.register_blueprint(main, url_prefix='')
