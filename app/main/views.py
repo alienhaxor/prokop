@@ -1,34 +1,21 @@
 from flask import Blueprint, request, render_template, flash,\
-    g, session, redirect, url_for
+    g, redirect, url_for
 
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app.main.forms import LoginForm, RegistrationForm
-
-#from app.main.forms import UserForm
-
-#from werkzeug import check_password_hash, generate_password_hash
+from app.main.forms import LoginForm, RegistrationForm, EditForm
 
 from app import db, bcrypt, lm
 from app.main.models import User
-
-#from flask.ext.admin import helpers
 
 
 main = Blueprint('main', __name__, template_folder='../templates/main/')
 
 
 @main.route('/')
-@login_required
 def index():
-    return 'hello2'
-
-
-@main.route('/test')
-@login_required
-def test():
-    return 'hello3'
+    return render_template("index.html")
 
 
 @main.route('/user/<name>', methods=['GET'])
@@ -92,6 +79,23 @@ def logout():
     return redirect(url_for("main.index"))
 
 
+@main.route('/user/<name>/edit', methods=['GET', 'POST'])
+@login_required
+def edit(name):
+    user = User.query.filter_by(name=name).first()
+    if user is None:
+        return page_not_found(404)
+    form = EditForm(obj=user)
+    if form.validate_on_submit():
+        g.user.name = form.name.data
+        #g.user.about_me = form.about_me.data
+        db.session.add(g.user)
+        db.session.commit()
+        return redirect(url_for('main.user', name=g.user.name))
+    return render_template('edit.html',
+                           form=form)
+
+
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -105,7 +109,7 @@ def page_not_found(error):
     return render_template('404.html'), 404
 
 
-#@main.errorhandler(500)
-#def internal_error(error):
-#    db.session.rollback()
-#   return render_template('500.html'), 500
+# @main.errorhandler(500)
+# def internal_error(error):
+#     db.session.rollback()
+#     return render_template('500.html'), 500

@@ -95,3 +95,9 @@ class ProjectForm(Form):
             )
             return False
         return True
+
+
+class EditForm(Form):
+    name = TextField('name', validators=[Required()])
+    about_me = TextAreaField('about_me',
+                             validators=[Length(min=0, max=140)])
