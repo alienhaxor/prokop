@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<hr>
+{% if user %}
+<ul>
+<li>email = {{user.email}}</li>
+<li>id ={{user.id}}</li>
+<li>username = {{user.name}}</li>
+<li>password = {{user.passwd}}</li>
+</ul>
+{% endif %}
+{% endblock %}
