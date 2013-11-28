@@ -23,6 +23,27 @@ class User(db.Model):
     def get_id(self):
         return self.id
 
+    @staticmethod
+    def check_unique_email(email):
+        if User.query.filter_by(email=email).first() is not None:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def check_unique_name(name):
+        if User.query.filter_by(name=name).first() is not None:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def check_unique_url(url):
+        if User.query.filter_by(url=url).first() is not None:
+            return True
+        else:
+            return False
+
     # Required for administrative interface
     def __unicode__(self):
         return self.username
@@ -90,6 +111,20 @@ class Project(db.Model):
         NB! Calls many2many's serialize property.
         """
         return [project_image.serialize for project_image in self.images]
+
+    @staticmethod
+    def check_unique_proj_name(name):
+        if Project.query.filter_by(name=name).first() is not None:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def check_unique_proj_url(url):
+        if Project.query.filter_by(url=url).first() is not None:
+            return True
+        else:
+            return False
 
 
 class Role(db.Model):
