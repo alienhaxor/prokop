@@ -1,0 +1,22 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{title}} - prokop</title>
+    {% else %}
+    <title>prokop</title>
+    {% endif %}
+  </head>
+  <body>
+    <div>Navigation: <a href={{ url_for('main.index') }}>Home</a>
+        {% if g.user.is_authenticated() %}
+        | <a href="{{ url_for('main.user', name=g.user.name) }}">Your Profile</a>
+        | <a href="{{ url_for('main.edit', name=g.user.name) }}">Edit Profile</a>
+        | <a href="{{ url_for('main.logout') }}">Logout</a>
+        {% else %}
+        | <a href="{{ url_for('main.login') }}">Login</a>
+        {% endif %}
+    </div>
+    <hr>
+    {% block content %}{% endblock %}
+  </body>
+</html>
