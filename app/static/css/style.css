@@ -1,0 +1,135 @@
+body {
+        background-color: #eee;
+}
+
+.bookContainer {
+        outline: 1px solid #aaa;
+        width: 350px;
+        height: 130px;
+        background-color: #fff;
+        float: left;
+        margin: 5px;
+}
+
+.bookContainer img {
+        float: left;
+        margin: 10px;
+}
+
+.bookContainer ul {
+    list-style-type: none;
+    margin-bottom: 0;
+}
+
+.bookContainer button {
+    float: right;
+    margin: 10px;
+}
+
+
+#addBook button {
+        display: block;
+        margin: 5px 20px 10px 10px;
+        float: right;
+        clear: both;
+}
+
+#addBook div {
+        width: 550px;
+}
+
+#addBook div:after {
+        content: "";
+        display: block;
+        height: 0;
+        visibility: hidden;
+        clear: both;
+        font-size: 0;
+        line-height: 0;
+}
+
+#dropbox{
+    border: 1px solid grey;
+        border-radius: 3px;
+        position: relative;
+        margin: 20px auto 20px;
+        min-height: 290px;
+        overflow: hidden;
+        padding-bottom: 40px;
+    width: 990px;
+}
+
+
+#dropbox .message{
+    font-size: 11px;
+    text-align: center;
+    padding-top: 160px;
+    display: block;
+}
+
+#dropbox:before{
+        border-radius: 3px 3px 0 0;
+}
+
+#dropbox .preview{
+        width: 160px;
+        height: 150px;
+        float: left;
+        margin: 55px 0 0 60px;
+        position: relative;
+        text-align: center;
+}
+
+#dropbox .preview img{
+        max-width: 240px;
+        max-height: 110px;
+        border: 3px solid #fff;
+        display: block;
+        box-shadow: 0 0 2px #000;
+}
+
+#dropbox .imageHolder{
+        display: inline-block;
+        position: relative;
+}
+
+#dropbox .uploaded{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: url('../img/done.png') no-repeat center center rgba(255,255,255,0.5);
+        display: none;
+}
+
+#dropbox .preview.done .uploaded{
+        display: block;
+}
+
+#dropbox .progressHolder{
+        position: absolute;
+        background-color:#252f38;
+        height: 12px;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        box-shadow: 0 0 2px #000;
+}
+
+#dropbox .progress{
+        background-color:#2586d0;
+        position: absolute;
+        height: 100%;
+        left: 0;
+        width: 0;
+        box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+        -moz-transition: 0.25s;
+        -webkit-transition: 0.25s;
+        -o-transition: 0.25s;
+        transition: 0.25s;
+}
+
+#dropbox .preview.done .progress{
+        width: 100% !important;
+}

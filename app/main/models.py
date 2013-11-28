@@ -52,7 +52,75 @@ class Project(db.Model):
     url = db.Column(db.String(64), index=True)
     student_points = db.Column(db.Integer)
     info = db.Column(db.String(5012))
-    picture = db.Column(db.String)
+    picture_url = db.Column(db.String)
+    active = db.Column(db.Boolean)
+    date_created = db.Column(db.DateTime)
+    images = db.relationship('Project_image', backref='project',
+                             lazy='dynamic')
+
+    #users = db.relationship('Project', backref='project_role')
+
+    def __init__(self, name=None, url=None, student_points=None,
+                 info=None, picture_url=None, active=None,
+                 date_created=None):
+        self.name = name
+        self.url = url
+        self.student_points = student_points
+        self.info = info
+        self.picture_url = picture_url
+        self.active = active
+        self.date_created = datetime.datetime.now()
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'info': self.info,
+            'picture_url': self.picture_url,
+            'releaseDate': dump_datetime(self.date_created),
+            'images': self.serialize_many2many
+        }
+
+    @property
+    def serialize_many2many(self):
+        """
+        Return object's relations in easily serializeable format.
+        NB! Calls many2many's serialize property.
+        """
+        return [project_image.serialize for project_image in self.images]
+
+
+class Role(db.Model):
+    #__tablename__ == 'role'
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('user.id'),
+                        primary_key=True)
+    project_id = db.Column(db.Integer,
+                           db.ForeignKey('project.id'),
+                           primary_key=True)
+    role = db.Column(db.String(64))
+    team = db.Column(db.String(64))
+    created_at = db.Column(db.DateTime)
+    token = db.relationship("User", backref="project_role")
+    #game = db.relationship("Game", backref="token_assocs")
+
+
+class Project_image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(256), index=True)
+    cover = db.Column(db.Boolean(), default=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'url': self.url,
+            'cover': self.cover
+        }
 
 
 def dump_datetime(value):
