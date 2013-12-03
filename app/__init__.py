@@ -6,6 +6,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.login import LoginManager
+from flask_wtf.csrf import CsrfProtect
 from config import basedir
 import redis
 
@@ -16,6 +17,15 @@ from flask import render_template
 from flask.ext.bcrypt import Bcrypt
 
 app = Flask(__name__)
+app.secret_key = 'myverylongsecretkey'
+
+CSRF_ENABLED = True
+SECRET_KEY  = '9cca0703342e24806a9f64e08c053dca7f2cd90f10529af8ea872afb0a0c77d4'
+CSRF_SESSION_KEY = "somethingimpossibletoguess"
+
+
+# csrf = CsrfProtect()
+# csrf.init_app(app)
 #red = redis.Redis("localhost")
 bcrypt = Bcrypt(app)
 api = Api(app)

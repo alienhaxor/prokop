@@ -1,7 +1,7 @@
 import os, json
 
 from flask import Blueprint, request, render_template, flash,\
-    g, redirect, url_for, jsonify, make_response
+    g, redirect, url_for, jsonify, make_response, session, abort
 
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
@@ -85,7 +85,7 @@ def login():
         return redirect(url_for('main.home'))
     form = LoginForm(request.form)
     # make sure data are valid, but doesn't validate password is right
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
             # the session can't be modified as it's signed,
@@ -94,7 +94,7 @@ def login():
             login_user(user)
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('Wrong email or password', 'error-message')
-    return render_template("forms.html", form=form)
+    return render_template("login.html", form=form)
 
 
 @main.before_request
@@ -105,7 +105,7 @@ def before_request():
 @main.route('/register/', methods=('GET', 'POST'))
 def register_view():
     form = RegistrationForm(request.form)
-    if form.validate():
+    if request.method == 'POST' and form.validate():
 
         user = User(email=form.email.data,
                     passwd=bcrypt.generate_password_hash(form.passwd.data),
@@ -117,8 +117,7 @@ def register_view():
 
         login_user(user)
         return redirect(url_for('main.index'))
-
-    return render_template('forms.html', form=form)
+    return render_template('register.html', form=form)
 
 
 @main.route("/logout/")
@@ -164,3 +163,20 @@ def page_not_found(error):
 # def internal_error(error):
 #     db.session.rollback()
 #     return render_template('500.html'), 500
+
+
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = '9cca0703342e24806a9f64e08c053dca7f2cd90f10529af8ea872afb0a0c77d4'
+    return session['_csrf_token']
+
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
