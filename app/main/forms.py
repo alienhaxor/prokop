@@ -99,5 +99,11 @@ class ProjectForm(Form):
 
 class EditForm(Form):
     name = TextField('name', validators=[Required()])
-    about_me = TextAreaField('about_me',
-                             validators=[Length(min=0, max=140)])
+    email = TextField('email', validators=[Required()])
+    location = TextField('location', validators=[Required()])
+    description = TextAreaField('description',
+                                validators=[Length(min=0, max=140)])
+    passwd_old = fields.PasswordField('old password',
+                                      validators=[validators.required()])
+    passwd_new = fields.PasswordField('new password',
+                                      validators=[validators.required()])

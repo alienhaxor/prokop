@@ -8,6 +8,8 @@ class User(db.Model):
     url = db.Column(db.String(64), index=True)
     email = db.Column(db.String(90), index=True)
     passwd = db.Column(db.String(512))
+    description = db.Column(db.String(2046))
+    location = db.Column(db.String(64))
     date_created = db.Column(db.DateTime)
 
     # Flask-Login integration
@@ -72,9 +74,11 @@ class Project(db.Model):
     name = db.Column(db.String(64), index=True)
     url = db.Column(db.String(64), index=True)
     student_points = db.Column(db.Integer)
-    info = db.Column(db.String(5012))
+    description = db.Column(db.String(2056))
+    need = db.Column(db.String(2056))
+    rewards = db.Column(db.String(512))
     picture_url = db.Column(db.String)
-    active = db.Column(db.Boolean)
+    status = db.Column(db.String(64))
     date_created = db.Column(db.DateTime)
     images = db.relationship('Project_image', backref='project',
                              lazy='dynamic')
@@ -82,15 +86,17 @@ class Project(db.Model):
     #users = db.relationship('Project', backref='project_role')
 
     def __init__(self, name=None, url=None, student_points=None,
-                 info=None, picture_url=None, active=None,
-                 date_created=None):
+                 description=None, picture_url=None, status=None,
+                 date_created=None, need=None, rewards=None):
         self.name = name
         self.url = url
         self.student_points = student_points
-        self.info = info
+        self.description = description
         self.picture_url = picture_url
-        self.active = active
+        self.status = status
         self.date_created = datetime.datetime.now()
+        self.need = need
+        self.rewards = rewards
 
     @property
     def serialize(self):
