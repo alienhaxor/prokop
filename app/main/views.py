@@ -82,10 +82,10 @@ def login():
     Login form
     """
     if current_user is not None and current_user.is_authenticated():
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.index'))
     form = LoginForm(request.form)
     # make sure data are valid, but doesn't validate password is right
-    if form.validate():
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
             # the session can't be modified as it's signed,
@@ -111,7 +111,7 @@ def register():
         user = User(email=form.email.data,
                     passwd=bcrypt.generate_password_hash(form.passwd.data),
                     name=form.name.data)
-        # user.url = urllib.urlencode(form.urlname.data)
+        #user.url = urllib.urlencode(form.urlname.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
