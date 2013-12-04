@@ -104,7 +104,7 @@ class Project(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'info': self.info,
+            'description': self.description,
             'picture_url': self.picture_url,
             'releaseDate': dump_datetime(self.date_created),
             'images': self.serialize_many2many

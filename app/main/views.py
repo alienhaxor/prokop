@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, flash,\
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app.main.forms import LoginForm, RegistrationForm, EditForm
+from app.main.forms import LoginForm, RegisterForm, EditForm
 
 from app import db, bcrypt, lm
 from app.main.models import User
@@ -104,13 +104,14 @@ def before_request():
 
 @main.route('/register/', methods=('GET', 'POST'))
 def register():
-    form = RegistrationForm(request.form)
-    if form.validate():
-
+    form = RegisterForm(request.form)
+    print 'JESUS'
+    if form.validate_on_submit():
+    	print 'JESUS HITLER'
         user = User(email=form.email.data,
                     passwd=bcrypt.generate_password_hash(form.passwd.data),
                     name=form.name.data)
-        user.url = urllib.urlencode(form.urlname.data)
+        # user.url = urllib.urlencode(form.urlname.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
@@ -118,7 +119,7 @@ def register():
         login_user(user)
         return redirect(url_for('main.index'))
 
-    return render_template('forms.html', form=form)
+    return render_template('register.html', form=form)
 
 
 @main.route("/logout/")
