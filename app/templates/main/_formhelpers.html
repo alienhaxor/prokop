@@ -6,8 +6,8 @@
     {% endif %}
     <div class="form-group {% if field.errors %}error{% endif %}">
         {% if with_label %}
-            <label for="{{ field.id }}" class="control-label">
-                {{ field.label.text }}{% if field.flags.required %} *{% endif %}:
+            <label for="{{ field.id }}" class="control-label col-sm-4 control-label">
+                {{ field.label.text }}{% if field.flags.required %}{% endif %}
             </label>
         {% endif %}
         
@@ -25,10 +25,13 @@
             </div>
 
         {% else %}
-       
+            <div class='col-sm-6'>
             {% if field.type in ('TextField', 'TextAreaField', 'PasswordField') %}
-                {% set class_ = class_ + ' input-xlarge form-control' %}
-          
+                
+                    
+                    {% set class_ = class_ + ' form-control' %}
+      
+
             {% elif field.type == 'FileField' %}
                 {% set class_ = class_ + ' input-file form-control' %}
             {% endif %}
@@ -39,6 +42,7 @@
               
             {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
             {% endif %}
+            </div>
       
         {% endif %}
         {% if field.errors %}

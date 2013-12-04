@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="container">
+                <div id="user_info">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+                            <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" class="img-responsive" alt="user image"/>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-9 col-lg-9">
+                            <h1 class="page-header">{{user.name}} <small>{{user.email}}</small></h1>
+                            <p>
+                                {% if user.description %}
+                                {{user.description}}
+                                {% endif %}
+                            </p>                
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <ul class="list-group text-center list-inline">
+                                <li class="list-group-item col-xs-4">
+                                    <h4 class="list-group-item-heading">Projects done</h4>
+                                    <p class="list-group-item-text">125</p>
+                                </li>
+                                <li class="list-group-item col-xs-4">
+                                    <h4 class="list-group-item-heading">Location</h4>
+                                    <p class="list-group-item-text">Lahti, Finland</p>
+                                </li>
+                                <li class="list-group-item col-xs-4">
+                                    <h4 class="list-group-item-heading">Joined</h4>
+                                    <p class="list-group-item-text">{{user.date_created}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="user_projects">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <h2 class="page-header">Projects</h2>
+                        </div>
+                        <div id="user_project1" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                            <div class="thumbnail">
+                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
+                                <div class="caption">
+                                    <h3>Project name</h3>
+                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="user_project2" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                            <div class="thumbnail">
+                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
+                                <div class="caption">
+                                    <h3>Project name</h3>
+                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="user_project3" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                            <div class="thumbnail">
+                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
+                                <div class="caption">
+                                    <h3>Project name</h3>
+                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="user_project4" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                            <div class="thumbnail">
+                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
+                                <div class="caption">
+                                    <h3>Project name</h3>
+                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="user_project5" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                            <div class="thumbnail">
+                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
+                                <div class="caption">
+                                    <h3>Project name</h3>
+                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>   
+            </div>
+{% endblock %}

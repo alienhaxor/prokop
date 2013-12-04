@@ -11,9 +11,9 @@ from app.main.models import User, Project
 from app import bcrypt
 
 
-class LoginForm(form.Form):
-    email = fields.TextField(validators=[validators.required()])
-    passwd = fields.PasswordField(validators=[validators.required()])
+class LoginForm(Form):
+    email = fields.TextField('Email address', [Required(), Email()])
+    passwd = fields.PasswordField('Password', [Required()])
 
     def validate_login(self, field):
         user = self.get_user()
@@ -28,10 +28,10 @@ class LoginForm(form.Form):
         return User.query.filter_by(email=self.email.data).first()
 
 
-class RegistrationForm(form.Form):
-    email = fields.TextField(validators=[validators.required()])
-    passwd = fields.PasswordField(validators=[validators.required()])
-    name = fields.TextField(validators=[validators.required()])
+class RegisterForm(Form):
+    email = fields.TextField('Email address', [Required()])
+    passwd = fields.PasswordField('Password', [Required()])
+    name = fields.TextField('Name', [Required()])
 
     def validate_login(self, field):
         if (User.query.filter_by(url=self.url.data).first()):
@@ -99,5 +99,11 @@ class ProjectForm(Form):
 
 class EditForm(Form):
     name = TextField('name', validators=[Required()])
-    about_me = TextAreaField('about_me',
-                             validators=[Length(min=0, max=140)])
+    email = TextField('email', validators=[Required()])
+    location = TextField('location', validators=[Required()])
+    description = TextAreaField('description',
+                                validators=[Length(min=0, max=140)])
+    passwd_old = fields.PasswordField('old password',
+                                      [Required()])
+    passwd_new = fields.PasswordField('new password',
+                                      [Required()])

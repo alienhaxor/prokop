@@ -1,4 +1,4 @@
-import os, json
+import os, json, urllib
 
 from flask import Blueprint, request, render_template, flash,\
     g, redirect, url_for, jsonify, make_response
@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, flash,\
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app.main.forms import LoginForm, RegistrationForm, EditForm
+from app.main.forms import LoginForm, RegisterForm, EditForm
 
 from app import db, bcrypt, lm
 from app.main.models import User
@@ -73,7 +73,7 @@ def user(name):
     user = User.query.filter_by(name=name).first()
     if user is None:
         return page_not_found(404)
-    return render_template("user_profile.html", user=user)
+    return render_template("user.html", user=user)
 
 
 @main.route('/login/', methods=['GET', 'POST'])
@@ -85,7 +85,7 @@ def login():
         return redirect(url_for('main.home'))
     form = LoginForm(request.form)
     # make sure data are valid, but doesn't validate password is right
-    if form.validate_on_submit():
+    if form.validate():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
             # the session can't be modified as it's signed,
@@ -103,14 +103,15 @@ def before_request():
 
 
 @main.route('/register/', methods=('GET', 'POST'))
-def register_view():
-    form = RegistrationForm(request.form)
-    if form.validate():
-
+def register():
+    form = RegisterForm(request.form)
+    print 'JESUS'
+    if form.validate_on_submit():
+    	print 'JESUS HITLER'
         user = User(email=form.email.data,
                     passwd=bcrypt.generate_password_hash(form.passwd.data),
                     name=form.name.data)
-
+        # user.url = urllib.urlencode(form.urlname.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
@@ -118,7 +119,7 @@ def register_view():
         login_user(user)
         return redirect(url_for('main.index'))
 
-    return render_template('forms.html', form=form)
+    return render_template('register.html', form=form)
 
 
 @main.route("/logout/")
@@ -139,12 +140,13 @@ def edit(name):
     form = EditForm(obj=user)
     if form.validate_on_submit():
         g.user.name = form.name.data
+        g.user.url = urllib.quote_plus(form.name.data)
         #g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
         return redirect(url_for('main.user', name=g.user.name))
-    return render_template('edit.html',
-                           form=form)
+    return render_template('user_manage.html',
+                           form=form, user=user)
 
 
 @lm.user_loader

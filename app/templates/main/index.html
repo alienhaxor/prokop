@@ -1,45 +1,130 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <script id="bookTemplate" type="text/template">
-            <img src="<%= coverImage %>"/>
-            <ul>
-                    <li><%= name %></li>
-                    <li><%= info %></li>
-                    <li><%= $.format.date( new Date( releaseDate ), 'd M yyyy' ) %></li>
-            </ul>
 
-            <button class="delete">Delete</button>
-        </script>
-
-        <div id="books">        
-            <form id="addBook" class="form-inline" role="form" action="#" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label class="sr-only" for="coverImage">CoverImage: </label>
-                    <div id="dropbox">
-                        <span class="message">Drop images here to upload.</span>
+		<div class="container">
+			<div class="carousel-wrapper">
+				<div class="row">
+					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+						<div id="myCarousel" class="carousel slide">
+							<div class="carousel-inner">
+								<div class="item active">
+									<img src="{{url_for('static', filename='img/main/kuva3.jpg') }}" alt="">
+									<div class="container">
+										<div class="carousel-caption">
+											<h1>Get your projects done!</h1>
+											<p class="lead">Want to know how Prokop works?</p>
+											<a class="btn btn-large btn-primary" href="#">Learn more...</a>
+										</div>
+									</div>
+								</div>
+								<div class="item">
+									<img src="{{url_for('static', filename='img/main/kuva4.jpg') }}" alt="">
+									<div class="container">
+										<div class="carousel-caption">
+											<h1>Sign up</h1>
+											<p class="lead">asdasdasdasdasd</p>
+											<a class="btn btn-large btn-primary" href="#">Learn more...</a>
+										</div>
+									</div>
+								</div>
+								<div class="item">
+									<img src="{{url_for('static', filename='img/main/kuva5.jpg') }}" alt="">
+									<div class="container">
+										<div class="carousel-caption">
+											<h1>asdasd</h1>
+											<p class="lead">asdasdasdasdasdasd</p>
+											<a class="btn btn-large btn-primary" href="#">Learn more...</a>
+										</div>
+									</div>
+								</div>
+							</div>
+								<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+									<span class="glyphicon glyphicon-chevron-left"></span>
+								</a>
+								<a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+									<span class="glyphicon glyphicon-chevron-right"></span>
+								</a>
+						</div><!-- /.carousel -->
+					</div>
+				</div>
+			</div><!-- /.carousel-wrapper -->
+			
+			<div class="project_info">
+                <div class="row">
+                    <div class="panel-group" id="accordion">                  
+                        <div class="col-sm-12">
+                            <div class="panel panel-info">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                    <div class="panel-heading">     
+                                        <h4 class="text-center">What is Prokopa</h4>                                    
+                                    </div>
+                                </a>
+                                <div id="collapse1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fring
+										</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                           
                     </div>
-                
-                <div id='coverImage'>
-
                 </div>
+            </div>
+			<div class="projects">
+				<div class="row">
+					<div class="col-md-12">
+						<h1>Projects</h1>
+						<div class="row">
+							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+								<div class="thumbnail">
+									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">
+									<h2>Crepe Cart Kick Start</h2>
+									<span>
+										by
+										Samantha Saliter Dwyer
+									</span>
+									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>
+								</div>
+							</div>
+							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+								<div class="thumbnail">
+									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">								
+									<h2>Crepe Cart Kick Start</h2>
+									<span>
+										by
+										Samantha Saliter Dwyer
+									</span>
+									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>
+								</div>
+							</div>
+							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+								<div class="thumbnail">
+									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">				
+									<h2>Crepe Cart Kick Start</h2>
+									<span>
+										by
+										Samantha Saliter Dwyer
+									</span>
+									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>								
+								</div>
+							</div>
+							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
+								<div class="thumbnail">
+									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">					
+									<h2>Crepe Cart Kick Start</h2>
+									<span>
+										by
+										Samantha Saliter Dwyer
+									</span>
+									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>				
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>	
 
-                <div class="form-group">
-                    <!-- <label class="sr-only" for="name">Email address</label> -->
-                    <input type="text" class="form-control" id="name" placeholder="Name">
-                </div>
-                <div class="form-group">
-                    <!-- <label class="sr-only" for="info">Password</label> -->
-                    <input type="text" class="form-control" id="info" placeholder="Info">
-                </div>
-
-                <input for="fileField" id="fileField" name="fileField" type="hidden" value="">
-
-                <button id="add" type="submit" class="btn btn-default">Add</button>
-            </form>
-
-        </div>
-
-
-<h1>index</h1>
 {% endblock %}
