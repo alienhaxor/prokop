@@ -1,6 +1,6 @@
-#from flask_wtf import Form
+from flask.ext.wtf import Form
 
-from wtforms import Form, TextField, BooleanField, TextAreaField,\
+from wtforms import TextField, BooleanField, TextAreaField,\
     RadioField, PasswordField, DecimalField, form, fields, validators
 
 from wtforms.validators import Required, Email, EqualTo, Length
@@ -12,8 +12,8 @@ from app import bcrypt
 
 
 class LoginForm(Form):
-    email = fields.TextField(validators=[validators.Required()])
-    passwd = fields.PasswordField(validators=[validators.Required()])
+    email = fields.TextField('Email address', [Required(), Email()])
+    passwd = fields.PasswordField('Password', [Required()])
 
     def validate_login(self, field):
         user = self.get_user()
@@ -28,10 +28,10 @@ class LoginForm(Form):
         return User.query.filter_by(email=self.email.data).first()
 
 
-class RegistrationForm(Form):
-    email = fields.TextField(validators=[validators.Required()])
-    passwd = fields.PasswordField(validators=[validators.Required()])
-    name = fields.TextField(validators=[validators.Required()])
+class RegisterForm(Form):
+    email = fields.TextField('Email address', [Required()])
+    passwd = fields.PasswordField('Password', [Required()])
+    name = fields.TextField('Name', [Required()])
 
     def validate_login(self, field):
         if (User.query.filter_by(url=self.url.data).first()):
@@ -42,13 +42,13 @@ class RegistrationForm(Form):
 class UserForm(Form):
     name = TextField('name', validators=[
         Length(min=1, max=64),
-        validators.Required()])
+        Required()])
     url = TextField('url', validators=[
         Length(min=1, max=64),
-        validators.Required()])
+        Required()])
     email = TextField('email', validators=[
         Length(min=6, max=90),
-        validators.Required()])
+        Required()])
 
     def __init__(self, original_url, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
@@ -71,13 +71,12 @@ class UserForm(Form):
 class ProjectForm(Form):
     name = TextField('name', validators=[
         Length(min=1, max=64),
-        validators.Required()])
+        Required()])
     url = TextField('url', validators=[
         Length(min=1, max=64),
-        validators.Required()])
+        Required()])
     student_points = TextField('student_points')
-    info = TextField('info', validators=[Length(min=1, max=5012),
-                                        validators.Required()])
+    info = TextField('info', validators=[Length(min=1, max=5012), Required()])
     picture = TextField('textfield')
 
     def __init__(self, original_url, *args, **kwargs):
@@ -100,5 +99,11 @@ class ProjectForm(Form):
 
 class EditForm(Form):
     name = TextField('name', validators=[Required()])
-    about_me = TextAreaField('about_me',
-                             validators=[Length(min=0, max=140)])
+    email = TextField('email', validators=[Required()])
+    location = TextField('location', validators=[Required()])
+    description = TextAreaField('description',
+                                validators=[Length(min=0, max=140)])
+    passwd_old = fields.PasswordField('old password',
+                                      [Required()])
+    passwd_new = fields.PasswordField('new password',
+                                      [Required()])

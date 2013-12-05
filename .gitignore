@@ -37,3 +37,6 @@ nosetests.xml
 
 # config
 config.py
+
+# alembic
+versions
