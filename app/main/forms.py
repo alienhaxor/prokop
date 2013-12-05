@@ -40,16 +40,14 @@ class RegisterForm(Form):
 
 # edit user.
 class UserForm(Form):
-    name = TextField('name', validators=[])
-    url = TextField('name', validators=[])
-    email = TextField('email', validators=[])
-    location = TextField('location', validators=[])
+    name = TextField('name', [Required()])
+    url = TextField('name')
+    email = TextField('email')
+    location = TextField('location')
     description = TextAreaField('description',
                                 validators=[Length(min=0, max=140)])
-    passwd_old = fields.PasswordField('old password',
-                                      [])
-    passwd_new = fields.PasswordField('new password',
-                                      [])
+    passwd_old = fields.PasswordField('old password')
+    passwd_new = fields.PasswordField('new password')
 
     # def __init__(self, original_url, *args, **kwargs):
     #     Form.__init__(self, *args, **kwargs)
@@ -70,22 +68,11 @@ class UserForm(Form):
 
 
 class ProjectForm(Form):
-    name = TextField('name', validators=[
-        Length(min=1, max=64),
-        Required()])
-    status = TextField('status', validators=[
-        Length(min=1, max=64)])
-    description = TextAreaField('description',
-                                validators=[
-                                    Length(min=1, max=5012),
-                                    Required()
-                                ])
-    need = TextAreaField('need', validators=[
-        Length(min=1, max=64),
-        Required()])
-    rewards = TextAreaField('rewards', validators=[
-        Length(min=1, max=64),
-        Required()])
+    name = TextField('name')
+    status = TextField('status')
+    description = TextAreaField('description')
+    need = TextAreaField('need')
+    rewards = TextAreaField('rewards')
     student_points = TextField('student_points')
     picture = TextField('textfield')
 

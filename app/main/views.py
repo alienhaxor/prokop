@@ -9,7 +9,7 @@ from flask.ext.login import login_user, logout_user,\
 from app.main.forms import LoginForm, RegisterForm, UserForm, ProjectForm
 
 from app import db, bcrypt, lm
-from app.main.models import User, Project
+from app.main.models import User, Project, Role
 
 from flask.ext.restful import Resource, reqparse, fields, marshal
 
@@ -24,6 +24,8 @@ from app import app, db, bcrypt, api
 from app.main.models import User, Project, Project_image
 
 from flask.ext.httpauth import HTTPBasicAuth
+
+import datetime
 
 #from flask.ext.admin import helpers
 
@@ -153,13 +155,14 @@ def logout():
 
 @main.route('/user/<url>/edit', methods=['GET', 'POST'])
 @login_required
-def edit(url):
+def edit_user(url):
     user = User.query.filter_by(url=url).first()
     if user is None:
         return page_not_found(404)
     form = UserForm(obj=user)
-    if form.validate():
+    if form.validate_on_submit():
         g.user.name = form.name.data
+        g.user.location = form.location.data
         g.user.url = urllib.quote_plus(form.name.data)
         db.session.add(g.user)
         db.session.commit()
@@ -181,17 +184,21 @@ def projects(url):
 @login_required
 def start():
     form = ProjectForm(request.form)
-    print 'panda 666'
-    if request.method == 'POST':  # and form.validate():
-        print 'HITLER 666'
+    if request.method == 'POST' and form.validate():
         project = Project(name=form.name.data,
                           description=form.description.data,
                           need=form.need.data,
                           rewards=form.rewards.data)
         project.url = urllib.quote_plus(form.name.data)
-        # Insert the record in our database and commit it
         db.session.add(project)
+
+        role = Role(role='owner', created_at=datetime.datetime.now())
+        db.session.add(role)
+
+        role.user = current_user
+        role.project = project
         db.session.commit()
+
         return redirect(url_for('main.projects', url=project.url))
 
     return render_template('new_project.html', form=form)

@@ -13,7 +13,7 @@
                 </div> 
                 <div id="project_content">
                     <div class="row">
-                     <form class='form-horizontal' method="POST" action="/start">
+                     <form class='form-horizontal' method="POST" action="{{ url_for('main.start') }}">
                         {% from "_formhelpers.html" import render_field %}
                         {{ form.csrf_token }}
                         <dl>

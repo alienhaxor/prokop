@@ -11,6 +11,7 @@ class User(db.Model):
     description = db.Column(db.String(2046))
     location = db.Column(db.String(64))
     date_created = db.Column(db.DateTime)
+    projects = db.relationship('Role', backref='project_role')
 
     # Flask-Login integration
     def is_authenticated(self):
@@ -78,10 +79,11 @@ class Project(db.Model):
     need = db.Column(db.String(2056))
     rewards = db.Column(db.String(512))
     picture_url = db.Column(db.String)
-    status = db.Column(db.String(64))
+    status = db.Column(db.String(64), default='Looking For People')
     date_created = db.Column(db.DateTime)
     images = db.relationship('Project_image', backref='project',
                              lazy='dynamic')
+    roles = db.relationship('Role', backref='project_assocs')
 
     #users = db.relationship('Project', backref='project_role')
 
@@ -144,8 +146,8 @@ class Role(db.Model):
     role = db.Column(db.String(64))
     team = db.Column(db.String(64))
     created_at = db.Column(db.DateTime)
-    token = db.relationship("User", backref="project_role")
-    #game = db.relationship("Game", backref="token_assocs")
+    user = db.relationship("User", backref="project_role")
+    project = db.relationship("Project", backref="project_assocs")
 
 
 class Project_image(db.Model):
