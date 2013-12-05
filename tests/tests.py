@@ -4,7 +4,7 @@ import os
 import sys
 import unittest
 
-sys.path.append('/home/tuhooja/Projects/prokop/')
+sys.path.append(os.path.realpath('..'))
 
 from app import app, db
 from app.main.models import User, Project

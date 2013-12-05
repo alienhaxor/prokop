@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <script id="bookTemplate" type="text/template">
+            <img src="<%= coverImage %>"/>
+            <ul>
+                    <li><%= name %></li>
+                    <li><%= info %></li>
+                    <li><%= $.format.date( new Date( releaseDate ), 'd M yyyy' ) %></li>
+            </ul>
+
+            <button class="delete">Delete</button>
+        </script>
+
+        <div id="books">        
+            <form id="addBook" class="form-inline" role="form" action="#" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="sr-only" for="coverImage">CoverImage: </label>
+                    <div id="dropbox">
+                        <span class="message">Drop images here to upload.</span>
+                    </div>
+                
+                <div id='coverImage'>
+
+                </div>
+
+                <div class="form-group">
+                    <!-- <label class="sr-only" for="name">Email address</label> -->
+                    <input type="text" class="form-control" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <!-- <label class="sr-only" for="info">Password</label> -->
+                    <input type="text" class="form-control" id="info" placeholder="Info">
+                </div>
+
+                <input for="fileField" id="fileField" name="fileField" type="hidden" value="">
+
+                <button id="add" type="submit" class="btn btn-default">Add</button>
+            </form>
+
+        </div>
+
+
+<h1>index</h1>
+{% endblock %}

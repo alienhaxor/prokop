@@ -5,27 +5,56 @@
         <title>Prokop</title>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
-
     </head>
-    <body>
-    <div>Navigation: <a href={{ url_for('main.index') }}>Home</a>
-        {% if g.user.is_authenticated() %}
-        | <a href="{{ url_for('main.user', name=g.user.name) }}">Your Profile</a>
-        | <a href="{{ url_for('main.edit', name=g.user.name) }}">Edit Profile</a>
-        | <a href="{{ url_for('main.logout') }}">Logout</a>
-        {% else %}
-        | <a href="{{ url_for('main.login') }}">Login</a>
-        {% endif %}
-    </div>
-    <hr>
-    {% block content %}{% endblock %}
+    <body>  
+        <header>
+              <div id="header" class="container">
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">Prokop</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <!--<li class="active"><a href="#">Discover projects</a></li>-->
+                        <li><a href="#">Start a project</a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if g.user.is_authenticated() %}
+                            <li><a href="{{ url_for('main.user', name=g.user.name) }}">Your profile</a></li>
+                            <li><a href="{{ url_for('main.edit', name=g.user.name) }}">Edit profile</a></li>                        
+                            <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('main.register') }}">Sign up</a></li>
+                            <li><a href="{{ url_for('main.login') }}">Log in</a></li>
+                        {% endif %}
+
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </nav>
+        </div>
+        </header>
+    <div id="main_content">
+
+
+  {% block content %}{% endblock %}
+
   </body>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
     <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-    <script src="https://rawgithub.com/phstc/jquery-dateFormat/master/jquery.dateFormat-1.0.js"></script>
+    <script src="https://rawgithub.com/phstc/jquery-dateFormat/master/dist/jquery-dateFormat.min.js"></script>
 
     <script type=text/javascript src="{{url_for('static', filename='js/models/book.js') }}"></script>
     <script type=text/javascript src="{{url_for('static', filename='js/collections/library.js') }}"></script>

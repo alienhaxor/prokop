@@ -1,6 +1,3 @@
-body {
-        background-color: #eee;
-}
 
 .bookContainer {
         outline: 1px solid #aaa;
@@ -132,4 +129,89 @@ body {
 
 #dropbox .preview.done .progress{
         width: 100% !important;
+}
+
+.body{
+    background-color: #ffffff;
+}
+.container  {
+  
+    background-color: #E8E8E8;
+}
+.categories {
+    float: right !important;
+    background-color: #2e2e2e;
+}
+.row > div {
+    border: none;
+}
+ .projects {
+    
+}
+.nav-tabs {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.tab-content{
+    padding: 10px;
+    width: 500px;
+    height: 500px;
+}
+.project {
+
+    display: inline;
+    float: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 220px;
+    margin: 0 20px 20px 0;
+    padding: 0;
+}
+.project p {
+    color: #75796f !important;
+    padding: 0 5px;
+    font-size: 12px !important;
+    line-height: 15px;
+    height: 60px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: word-break;
+}
+.project h2 {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 15px;
+    padding: 0 5px;
+    margin-bottom: 5px;
+}
+.center {
+    margin: 0 auto;
+    width: 500px;
+    height: 300px;
+}
+.centerbox{
+    width: 500px;
+    height: 300px;
+    background-color: #FFFFFF;
+    border-style:solid;
+    border-color:#FFFFFF;
+}
+#register_container{
+    min-height: 700px;
+}
+#project_buttons > a {
+    margin:2px auto;
+}
+#project_info {
+    margin-top:15px;
+}
+#project_nav {
+    margin-bottom:10px;
+}
+#manage_user_info, #project_content, #project_info, #new_project_container {
+    margin-bottom:30px;
+}
+.user_move_button {
+
 }

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+        <div class="container">
+            <div id="project_title">
+                <div class="row">
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <h1 class="text-center">Example project<br /><small>by Corporation Oy</small></h1>
+                    </div>
+                </div>
+            </div>
+            <div id="project_media">
+                <div class="row">
+                    <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                        <img src="{{url_for('static', filename='img/main/project_example.jpg') }}" class="img-responsive" alt="Responsive image" />
+                    </div>
+                    <div id="project_buttons" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">Project status</h4>
+                                <p class="list-group-item-text">Looking for people</p>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">People signed</h4>
+                                <p class="list-group-item-text">12</p>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">Created</h4>
+                                <p class="list-group-item-text">12.11.2013</p>
+                            </li>
+                        </ul>
+                        <a class="btn btn-primary btn-lg">Sign up</a>
+                        <a class="btn btn-danger btn-lg">Lead this project</a>
+                    </div>
+                </div>
+            </div>
+            <div id="project_info">
+                <div class="row">
+                    <div class="panel-group" id="accordion">                  
+                        <div class="col-xs-12">
+                            <div class="panel panel-info">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                    <div class="panel-heading">     
+                                        <h4 class="text-center">What is project</h4>                                    
+                                    </div>
+                                </a>
+                                <div id="collapse1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fringilla. In nec est tellus.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="panel panel-info">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                                    <div class="panel-heading">
+                                        <h4 class="text-center">What we need</h4>
+                                    </div>
+                                </a>
+                                <div id="collapse2" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fringilla. In nec est tellus.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="panel panel-info">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                                    <div class="panel-heading">
+                                        <h4 class="text-center">Project rewards</h4>
+                                    </div>
+                                </a>
+                                <div id="collapse3" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fringilla. In nec est tellus.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
