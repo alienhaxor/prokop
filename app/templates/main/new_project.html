@@ -13,13 +13,17 @@
                 </div> 
                 <div id="project_content">
                     <div class="row">
-                     <form class='form-horizontal' method="POST" action="">
+                     <form class='form-horizontal' method="POST" action="{{ url_for('main.start') }}">
                         {% from "_formhelpers.html" import render_field %}
+                        {{ form.csrf_token }}
                         <dl>
                         {{ render_field(form.name, with_label=True) }}
+                        {{ render_field(form.description, with_label=True) }}
+                        {{ render_field(form.need, with_label=True) }}
+                        {{ render_field(form.rewards, with_label=True) }}
                         </dl>
                         <div class="col-sm-6 col-sm-offset-4">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" name='submit' class="btn btn-primary" value="start">Start Project</button>
                         </div>
                     </form>
                         <!--------<form class="form-horizontal" role="form">

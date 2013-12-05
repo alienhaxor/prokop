@@ -25,16 +25,17 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <!--<li class="active"><a href="#">Discover projects</a></li>-->
-                        <li><a href="#">Start a project</a></li>
+                        <li><a href="{{ url_for('main.start') }}">Start a project</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
                         {% if g.user.is_authenticated() %}
-                            <li><a href="{{ url_for('main.user', name=g.user.name) }}">Your profile</a></li>
-                            <li><a href="{{ url_for('main.edit', name=g.user.name) }}">Edit profile</a></li>                        
+                            <li><a href="{{ url_for('main.user', url=g.user.url) }}">{{ g.user.name }}</a></li>
+                            <li><a href="{{ url_for('main.edit_user', url=g.user.url) }}">Edit profile</a></li>                        
                             <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
                         {% else %}
                             <li><a href="{{ url_for('main.register') }}">Sign up</a></li>
+                            <li><a href="{{ url_for('main.register') }}">Log in</a></li>
                         {% endif %}
 
                     </ul>

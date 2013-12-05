@@ -6,10 +6,10 @@ from flask import Blueprint, request, render_template, flash,\
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app.main.forms import LoginForm, RegisterForm, EditForm
+from app.main.forms import LoginForm, RegisterForm, UserForm, ProjectForm
 
 from app import db, bcrypt, lm
-from app.main.models import User, Project
+from app.main.models import User, Project, Role
 
 from flask.ext.restful import Resource, reqparse, fields, marshal
 
@@ -24,6 +24,8 @@ from app import app, db, bcrypt, api
 from app.main.models import User, Project, Project_image
 
 from flask.ext.httpauth import HTTPBasicAuth
+
+import datetime
 
 #from flask.ext.admin import helpers
 
@@ -68,12 +70,12 @@ def unauthorized():
     # displaying the default auth dialog
 
 
-@main.route('/user/<name>', methods=['GET'])
-def user(name):
-    user = User.query.filter_by(name=name).first()
+@main.route('/user/<url>', methods=['GET'])
+def user(url):
+    user = User.query.filter_by(url=url).first()
     if user is None:
         return page_not_found(404)
-    return render_template("user_profile.html", user=user)
+    return render_template("user.html", user=user)
 
 
 # @main.route('/login', methods=['GET', 'POST'])
@@ -111,7 +113,7 @@ def register():
     loginForm = LoginForm(request.form, prefix="loginForm")
 
     # log in user
-    if request.method == 'POST' and loginForm.validate():        
+    if request.method == 'POST' and loginForm.validate():
         user = User.query.filter_by(email=loginForm.email.data).first()
         if user and bcrypt.check_password_hash(user.passwd,
                                                loginForm.passwd.data):
@@ -130,6 +132,7 @@ def register():
                         registerForm.passwd.data),
                     name=registerForm.name.data)
         user.url = urllib.quote_plus(registerForm.name.data)
+        #user_url = user_make_url(registerForm.name.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
@@ -150,50 +153,78 @@ def logout():
     return redirect(url_for("main.index"))
 
 
-@main.route('/user/<name>/edit', methods=['GET', 'POST'])
+@main.route('/user/<url>/edit', methods=['GET', 'POST'])
 @login_required
-def edit(name):
-    user = User.query.filter_by(name=name).first()
+def edit_user(url):
+    user = User.query.filter_by(url=url).first()
     if user is None:
         return page_not_found(404)
-    form = EditForm(obj=user)
+    form = UserForm(obj=user)
     if form.validate_on_submit():
         g.user.name = form.name.data
+        g.user.location = form.location.data
         g.user.url = urllib.quote_plus(form.name.data)
-        #g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
-        return redirect(url_for('main.user', name=g.user.name))
+        return redirect(url_for('main.user', url=g.user.url))
     return render_template('user_manage.html',
                            form=form, user=user)
 
 
 # Project Views
-@main.route('/projects/<projects>', methods=['GET'])
-def projects(projects):
-    project = Project.query.filter_by(url=projects).first()
+@main.route('/projects/<url>', methods=['GET'])
+def projects(url):
+    project = Project.query.filter_by(url=url).first()
     if project is None:
         return page_not_found(404)
     return render_template("project.html", project=project)
 
 
 @main.route('/start', methods=('GET', 'POST'))
+@login_required
 def start():
-    form = RegistrationForm(request.form)
-    if form.validate():
+    form = ProjectForm(request.form)
+    if request.method == 'POST' and form.validate():
+        project = Project(name=form.name.data,
+                          description=form.description.data,
+                          need=form.need.data,
+                          rewards=form.rewards.data)
+        project.url = urllib.quote_plus(form.name.data)
+        db.session.add(project)
 
-        user = User(email=form.email.data,
-                    passwd=bcrypt.generate_password_hash(form.passwd.data),
-                    name=form.name.data)
-        user.url = urllib.urlencode(form.name.data)
-        # Insert the record in our database and commit it
-        db.session.add(user)
+        role = Role(role='owner', created_at=datetime.datetime.now())
+        db.session.add(role)
+
+        role.user = current_user
+        role.project = project
         db.session.commit()
 
-        login_user(user)
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.projects', url=project.url))
 
-    return render_template('forms.html', form=form)
+    return render_template('new_project.html', form=form)
+
+# manage project
+
+# @main.route('/projects/<projects>/manage', methods=['GET', 'POST'])
+# @login_required
+# def manage(projects):
+#     project = User.query.filter_by(url=projects).first()
+#     if project is None:
+#         return page_not_found(404)
+#     form = ProjectForm(obj=project)
+#     if form.validate_on_submit():
+#         g.project.name = form.name.data
+#         g.project.status = form.status.data
+#         g.project.description = form.description.data
+#         g.project.need = form.need.data
+#         g.project.rewards = form.rewards.data
+#         g.project.url = urllib.quote_plus(form.name.data)
+#         db.session.add(g.project)
+#         db.session.commit()
+#         return redirect(url_for('main.projects', name=g.project.name))
+#     return render_template('',
+#                            form=form, user=user)
+
 
 @lm.user_loader
 def load_user(id):

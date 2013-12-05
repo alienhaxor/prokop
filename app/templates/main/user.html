@@ -9,6 +9,9 @@
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-9 col-lg-9">
                             <h1 class="page-header">{{user.name}} <small>{{user.email}}</small></h1>
+                            {% if user.url %}
+                                <h3>{{user.url}}</h3>
+                            {% endif %}
                             <p>
                                 {% if user.description %}
                                 {{user.description}}
@@ -20,16 +23,16 @@
                         <div class="col-xs-12">
                             <ul class="list-group text-center list-inline">
                                 <li class="list-group-item col-xs-4">
-                                    <h4 class="list-group-item-heading">Projects done</h4>
-                                    <p class="list-group-item-text">125</p>
+                                    <h4 class="list-group-item-heading">Project Count</h4>
+                                    <p class="list-group-item-text">{{ user.projects|length }}</p>
                                 </li>
                                 <li class="list-group-item col-xs-4">
                                     <h4 class="list-group-item-heading">Location</h4>
-                                    <p class="list-group-item-text">Lahti, Finland</p>
+                                    <p class="list-group-item-text">{{user.location}}</p>
                                 </li>
                                 <li class="list-group-item col-xs-4">
                                     <h4 class="list-group-item-heading">Joined</h4>
-                                    <p class="list-group-item-text">{{user.date_created}}</p>
+                                    <p class="list-group-item-text">{{user.date_created.strftime('%d %b %Y')}}</p>
                                 </li>
                             </ul>
                         </div>
@@ -40,56 +43,22 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <h2 class="page-header">Projects</h2>
                         </div>
+
+                        {% for role in user.projects %} 
+
                         <div id="user_project1" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
                             <div class="thumbnail">
                                 <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
                                 <div class="caption">
-                                    <h3>Project name</h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
+                                    <h3>{{role.project.name}}</h3>
+                                    <p>{{role.project.description}}</p>
+                                    <p><a href="{{ url_for('main.projects', url=role.project.url) }}" class="btn btn-primary" role="button">Check it out!</a></p>
                                 </div>
                             </div>
                         </div>
-                        <div id="user_project2" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="thumbnail">
-                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
-                                <div class="caption">
-                                    <h3>Project name</h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="user_project3" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="thumbnail">
-                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
-                                <div class="caption">
-                                    <h3>Project name</h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="user_project4" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="thumbnail">
-                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
-                                <div class="caption">
-                                    <h3>Project name</h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="user_project5" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="thumbnail">
-                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
-                                <div class="caption">
-                                    <h3>Project name</h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-primary" role="button">Project page</a></p>
-                                </div>
-                            </div>
-                        </div>
+
+                        {% endfor %}</small>
+
                     </div>  
                 </div>   
             </div>
