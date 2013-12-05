@@ -6,10 +6,10 @@ from flask import Blueprint, request, render_template, flash,\
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app.main.forms import LoginForm, RegisterForm, EditForm
+from app.main.forms import LoginForm, RegistrationForm, EditForm, NewProjectForm
 
 from app import db, bcrypt, lm
-from app.main.models import User
+from app.main.models import User, Project
 
 from flask.ext.restful import Resource, reqparse, fields, marshal
 
@@ -82,10 +82,10 @@ def login():
     Login form
     """
     if current_user is not None and current_user.is_authenticated():
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.home'))
     form = LoginForm(request.form)
     # make sure data are valid, but doesn't validate password is right
-    if form.validate_on_submit():
+    if form.validate():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
             # the session can't be modified as it's signed,
@@ -104,14 +104,13 @@ def before_request():
 
 @main.route('/register/', methods=('GET', 'POST'))
 def register():
-    form = RegisterForm(request.form)
-    print 'JESUS'
-    if form.validate_on_submit():
-    	print 'JESUS HITLER'
+    form = RegistrationForm(request.form)
+    if form.validate():
+
         user = User(email=form.email.data,
                     passwd=bcrypt.generate_password_hash(form.passwd.data),
                     name=form.name.data)
-        #user.url = urllib.urlencode(form.urlname.data)
+        user.url = urllib.urlencode(form.name.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
@@ -119,7 +118,7 @@ def register():
         login_user(user)
         return redirect(url_for('main.index'))
 
-    return render_template('register.html', form=form)
+    return render_template('forms.html', form=form)
 
 
 @main.route("/logout/")
@@ -148,6 +147,33 @@ def edit(name):
     return render_template('user_manage.html',
                            form=form, user=user)
 
+
+# Project Views
+@main.route('/projects/<projects>', methods=['GET'])
+def projects(projects):
+    project = Project.query.filter_by(url=projects).first()
+    if project is None:
+        return page_not_found(404)
+    return render_template("project.html", project=project)
+
+
+@main.route('/start', methods=('GET', 'POST'))
+def register():
+    form = RegistrationForm(request.form)
+    if form.validate():
+
+        user = User(email=form.email.data,
+                    passwd=bcrypt.generate_password_hash(form.passwd.data),
+                    name=form.name.data)
+        user.url = urllib.urlencode(form.name.data)
+        # Insert the record in our database and commit it
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+        return redirect(url_for('main.index'))
+
+    return render_template('forms.html', form=form)
 
 @lm.user_loader
 def load_user(id):
