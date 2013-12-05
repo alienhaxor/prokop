@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, flash,\
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app.main.forms import LoginForm, RegistrationForm, EditForm, NewProjectForm
+from app.main.forms import LoginForm, RegisterForm, UserForm, ProjectForm
 
 from app import db, bcrypt, lm
 from app.main.models import User, Project
@@ -68,9 +68,9 @@ def unauthorized():
     # displaying the default auth dialog
 
 
-@main.route('/user/<name>', methods=['GET'])
-def user(name):
-    user = User.query.filter_by(name=name).first()
+@main.route('/user/<user>', methods=['GET'])
+def user(user):
+    user = User.query.filter_by(url=user).first()
     if user is None:
         return page_not_found(404)
     return render_template("user.html", user=user)
@@ -104,13 +104,13 @@ def before_request():
 
 @main.route('/register/', methods=('GET', 'POST'))
 def register():
-    form = RegistrationForm(request.form)
+    form = RegisterForm(request.form)
     if form.validate():
 
         user = User(email=form.email.data,
                     passwd=bcrypt.generate_password_hash(form.passwd.data),
                     name=form.name.data)
-        user.url = urllib.urlencode(form.name.data)
+        user.url = urllib.quote_plus(form.name.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
@@ -130,13 +130,13 @@ def logout():
     return redirect(url_for("main.index"))
 
 
-@main.route('/user/<name>/edit', methods=['GET', 'POST'])
+@main.route('/user/<user>/edit', methods=['GET', 'POST'])
 @login_required
-def edit(name):
-    user = User.query.filter_by(name=name).first()
+def edit(user):
+    user = User.query.filter_by(url=user).first()
     if user is None:
         return page_not_found(404)
-    form = EditForm(obj=user)
+    form = UserForm(obj=user)
     if form.validate_on_submit():
         g.user.name = form.name.data
         g.user.url = urllib.quote_plus(form.name.data)
@@ -157,23 +157,46 @@ def projects(projects):
     return render_template("project.html", project=project)
 
 
-@main.route('/start', methods=('GET', 'POST'))
-def register():
-    form = RegistrationForm(request.form)
+@main.route('/start/', methods=('GET', 'POST'))
+def start():
+    form = ProjectForm(request.form)
     if form.validate():
 
-        user = User(email=form.email.data,
-                    passwd=bcrypt.generate_password_hash(form.passwd.data),
-                    name=form.name.data)
-        user.url = urllib.urlencode(form.name.data)
+        project = Project(name=form.name.data,
+                          status=form.status.data,
+                          description=form.status.data,
+                          need=form.need.data,
+                          rewards=form.rewards.data)
+        project.url = urllib.quote_plus(form.name.data)
         # Insert the record in our database and commit it
-        db.session.add(user)
+        db.session.add(project)
         db.session.commit()
-
-        login_user(user)
         return redirect(url_for('main.index'))
 
-    return render_template('forms.html', form=form)
+    return render_template('new_project.html', form=form)
+
+# manage project
+
+# @main.route('/projects/<projects>/manage', methods=['GET', 'POST'])
+# @login_required
+# def manage(projects):
+#     project = User.query.filter_by(url=projects).first()
+#     if project is None:
+#         return page_not_found(404)
+#     form = ProjectForm(obj=project)
+#     if form.validate_on_submit():
+#         g.project.name = form.name.data
+#         g.project.status = form.status.data
+#         g.project.description = form.description.data
+#         g.project.need = form.need.data
+#         g.project.rewards = form.rewards.data
+#         g.project.url = urllib.quote_plus(form.name.data)
+#         db.session.add(g.project)
+#         db.session.commit()
+#         return redirect(url_for('main.projects', name=g.project.name))
+#     return render_template('',
+#                            form=form, user=user)
+
 
 @lm.user_loader
 def load_user(id):

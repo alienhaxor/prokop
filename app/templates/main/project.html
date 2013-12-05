@@ -6,7 +6,7 @@
             <div id="project_title">
                 <div class="row">
                     <div class="col-xs-6 col-xs-offset-3">
-                        <h1 class="text-center">Example project<br /><small>by Corporation Oy</small></h1>
+                        <h1 class="text-center">{{project.name}}<br /><small>by WTFisthis Oy</small></h1>
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Project status</h4>
-                                <p class="list-group-item-text">Looking for people</p>
+                                <p class="list-group-item-text">{{project.date_created}}</p>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">People signed</h4>
@@ -27,7 +27,7 @@
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Created</h4>
-                                <p class="list-group-item-text">12.11.2013</p>
+                                <p class="list-group-item-text">{{project.date_created}}</p>
                             </li>
                         </ul>
                         <a class="btn btn-primary btn-lg">Sign up</a>
@@ -47,8 +47,9 @@
                                 </a>
                                 <div id="collapse1" class="panel-collapse collapse in">
                                     <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fringilla. In nec est tellus.
-                                        </p>
+                                        <p>{% if project.description %}
+                                            {{project.description}}
+                                            {% endif %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -62,8 +63,9 @@
                                 </a>
                                 <div id="collapse2" class="panel-collapse collapse in">
                                     <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fringilla. In nec est tellus.
-                                        </p>
+                                        <p>{% if project.need %}
+                                            {{project.need}}
+                                            {% endif %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -77,8 +79,9 @@
                                 </a>
                                 <div id="collapse3" class="panel-collapse collapse in">
                                     <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fringilla. In nec est tellus.
-                                        </p>
+                                        <p>{% if project.rewards %}
+                                            {{project.rewards}}
+                                            {% endif %}</p>
                                     </div>
                                 </div>
                             </div>

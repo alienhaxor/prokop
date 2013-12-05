@@ -40,15 +40,15 @@ class RegisterForm(Form):
 
 # edit user.
 class UserForm(Form):
-    name = TextField('name', validators=[
-        Length(min=1, max=64),
-        Required()])
-    url = TextField('url', validators=[
-        Length(min=1, max=64),
-        Required()])
-    email = TextField('email', validators=[
-        Length(min=6, max=90),
-        Required()])
+    name = TextField('name', validators=[Required()])
+    email = TextField('email', validators=[Required()])
+    location = TextField('location', validators=[Required()])
+    description = TextAreaField('description',
+                                validators=[Length(min=0, max=140)])
+    passwd_old = fields.PasswordField('old password',
+                                      [Required()])
+    passwd_new = fields.PasswordField('new password',
+                                      [Required()])
 
     def __init__(self, original_url, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
@@ -72,11 +72,18 @@ class ProjectForm(Form):
     name = TextField('name', validators=[
         Length(min=1, max=64),
         Required()])
-    url = TextField('url', validators=[
+    need = TextField('need', validators=[
+        Length(min=1, max=64),
+        Required()])
+    status = TextField('status', validators=[
+        Length(min=1, max=64),
+        Required()])
+    rewards = TextField('rewards', validators=[
         Length(min=1, max=64),
         Required()])
     student_points = TextField('student_points')
-    info = TextField('info', validators=[Length(min=1, max=5012), Required()])
+    description = TextField('description',
+                            validators=[Length(min=1, max=5012), Required()])
     picture = TextField('textfield')
 
     def __init__(self, original_url, *args, **kwargs):
@@ -95,15 +102,3 @@ class ProjectForm(Form):
             )
             return False
         return True
-
-
-class EditForm(Form):
-    name = TextField('name', validators=[Required()])
-    email = TextField('email', validators=[Required()])
-    location = TextField('location', validators=[Required()])
-    description = TextAreaField('description',
-                                validators=[Length(min=0, max=140)])
-    passwd_old = fields.PasswordField('old password',
-                                      [Required()])
-    passwd_new = fields.PasswordField('new password',
-                                      [Required()])
