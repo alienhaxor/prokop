@@ -68,33 +68,33 @@ def unauthorized():
     # displaying the default auth dialog
 
 
-@main.route('/user/<user>', methods=['GET'])
-def user(user):
-    user = User.query.filter_by(url=user).first()
+@main.route('/user/<url>', methods=['GET'])
+def user(url):
+    user = User.query.filter_by(url=url).first()
     if user is None:
         return page_not_found(404)
     return render_template("user.html", user=user)
 
 
-@main.route('/login/', methods=['GET', 'POST'])
-def login():
-    """
-    Login form
-    """
-    if current_user is not None and current_user.is_authenticated():
-        return redirect(url_for('main.home'))
-    form = LoginForm(request.form)
-    # make sure data are valid, but doesn't validate password is right
-    if form.validate():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
-            # the session can't be modified as it's signed,
-            # it's a safe place to store the user id
-            #session['user_id'] = user.id
-            login_user(user)
-            return redirect(request.args.get('next') or url_for('main.index'))
-        flash('Wrong email or password', 'error-message')
-    return render_template("forms.html", form=form)
+# @main.route('/login', methods=['GET', 'POST'])
+# def login():
+#     """
+#     Login form
+#     """
+#     if current_user is not None and current_user.is_authenticated():
+#         return redirect(url_for('main.home'))
+#     form = LoginForm(request.form)
+#     # make sure data are valid, but doesn't validate password is right
+#     if request.method == 'POST' and form.validate():
+#         user = User.query.filter_by(email=form.email.data).first()
+#         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
+#             # the session can't be modified as it's signed,
+#             # it's a safe place to store the user id
+#             #session['user_id'] = user.id
+#             login_user(user)
+#             return redirect(request.args.get('next') or url_for('main.index'))
+#         flash('Wrong email or password', 'error-message')
+#     return render_template("login.html", form=form)
 
 
 @main.before_request
@@ -102,23 +102,44 @@ def before_request():
     g.user = current_user
 
 
-@main.route('/register/', methods=('GET', 'POST'))
+@main.route('/login', methods=['GET', 'POST'])
+@main.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegisterForm(request.form)
-    if form.validate():
+    if current_user is not None and current_user.is_authenticated():
+        return redirect(url_for('main.index'))
+    registerForm = RegisterForm(request.form, prefix="registerForm")
+    loginForm = LoginForm(request.form, prefix="loginForm")
 
-        user = User(email=form.email.data,
-                    passwd=bcrypt.generate_password_hash(form.passwd.data),
-                    name=form.name.data)
-        user.url = urllib.quote_plus(form.name.data)
+    # log in user
+    if request.method == 'POST' and loginForm.validate():
+        user = User.query.filter_by(email=loginForm.email.data).first()
+        if user and bcrypt.check_password_hash(user.passwd,
+                                               loginForm.passwd.data):
+            # the session can't be modified as it's signed,
+            # it's a safe place to store the user id
+            #session['user_id'] = user.id
+            login_user(user)
+            return redirect(request.args.get('next') or url_for('main.index'))
+        flash('Wrong email or password', 'error-message')
+
+    # register user
+    if request.method == 'POST' and registerForm.validate():
+
+        user = User(email=registerForm.email.data,
+                    passwd=bcrypt.generate_password_hash(
+                        registerForm.passwd.data),
+                    name=registerForm.name.data)
+        user.url = urllib.quote_plus(registerForm.name.data)
+        #user_url = user_make_url(registerForm.name.data)
         # Insert the record in our database and commit it
         db.session.add(user)
         db.session.commit()
 
         login_user(user)
         return redirect(url_for('main.index'))
-
-    return render_template('forms.html', form=form)
+    return render_template('register.html',
+                           registerForm=registerForm,
+                           loginForm=loginForm)
 
 
 @main.route("/logout/")
@@ -130,48 +151,48 @@ def logout():
     return redirect(url_for("main.index"))
 
 
-@main.route('/user/<user>/edit', methods=['GET', 'POST'])
+@main.route('/user/<url>/edit', methods=['GET', 'POST'])
 @login_required
-def edit(user):
-    user = User.query.filter_by(url=user).first()
+def edit(url):
+    user = User.query.filter_by(url=url).first()
     if user is None:
         return page_not_found(404)
     form = UserForm(obj=user)
-    if form.validate_on_submit():
+    if form.validate():
         g.user.name = form.name.data
         g.user.url = urllib.quote_plus(form.name.data)
-        #g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
-        return redirect(url_for('main.user', name=g.user.name))
+        return redirect(url_for('main.user', url=g.user.url))
     return render_template('user_manage.html',
                            form=form, user=user)
 
 
 # Project Views
-@main.route('/projects/<projects>', methods=['GET'])
-def projects(projects):
-    project = Project.query.filter_by(url=projects).first()
+@main.route('/projects/<url>', methods=['GET'])
+def projects(url):
+    project = Project.query.filter_by(url=url).first()
     if project is None:
         return page_not_found(404)
     return render_template("project.html", project=project)
 
 
-@main.route('/start/', methods=('GET', 'POST'))
+@main.route('/start', methods=('GET', 'POST'))
+@login_required
 def start():
     form = ProjectForm(request.form)
-    if form.validate():
-
+    print 'panda 666'
+    if request.method == 'POST':  # and form.validate():
+        print 'HITLER 666'
         project = Project(name=form.name.data,
-                          status=form.status.data,
-                          description=form.status.data,
+                          description=form.description.data,
                           need=form.need.data,
                           rewards=form.rewards.data)
         project.url = urllib.quote_plus(form.name.data)
         # Insert the record in our database and commit it
         db.session.add(project)
         db.session.commit()
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.projects', url=project.url))
 
     return render_template('new_project.html', form=form)
 

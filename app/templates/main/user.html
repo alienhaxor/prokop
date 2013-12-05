@@ -9,6 +9,9 @@
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-9 col-lg-9">
                             <h1 class="page-header">{{user.name}} <small>{{user.email}}</small></h1>
+                            {% if user.url %}
+                                <h3>{{user.url}}</h3>
+                            {% endif %}
                             <p>
                                 {% if user.description %}
                                 {{user.description}}
