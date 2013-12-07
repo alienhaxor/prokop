@@ -38,7 +38,7 @@ manager.add_command('db', MigrateCommand)
 app.config.from_object('config')
 lm = LoginManager()
 lm.init_app(app)
-lm.login_view = 'main.register'
+lm.login_view = 'main.signup'
 lm.logout_view = 'main.logout'
 lm.login_message = u"Please log in to access this page."
 
@@ -49,7 +49,6 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
-app.config['SECRET_KEY'] = '9cca0703342e24806a9f64e08c053dca7f2cd90f10529af8ea872afb0a0c77d4'
 
 toolbar = DebugToolbarExtension(app)
 

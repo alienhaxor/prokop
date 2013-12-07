@@ -215,3 +215,36 @@
 .user_move_button {
 
 }
+
+
+.project-card h2.bbcard_name a {
+    color: #0b1902;
+}
+
+.project-card h2.bbcard_name strong {
+    display: block;
+    max-height: 30px;
+    overflow: hidden;
+}
+
+.project-card h2.bbcard_name span {
+    display: block;
+    font-size: 12px;
+    max-height: 15px;
+    overflow: hidden;
+    color: #75796f;
+    font-weight: normal;
+    padding-top: 2px;
+}
+
+.project-card p.desc {
+    color: #75796f !important;
+    padding: 0 5px;
+    font-size: 12px !important;
+    line-height: 15px;
+    height: 60px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: word-break;
+}
+

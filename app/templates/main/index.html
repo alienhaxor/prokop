@@ -76,50 +76,28 @@
 					<div class="col-md-12">
 						<h1>Projects</h1>
 						<div class="row">
+
+							{% for project in projects %}
 							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-								<div class="thumbnail">
-									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">
-									<h2>Crepe Cart Kick Start</h2>
-									<span>
-										by
-										Samantha Saliter Dwyer
-									</span>
-									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>
+								<div class="project-card">
+									<div class="thumbnail">
+										<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">
+										<h2 class="bbcard_name"><a href="{{ url_for('main.project', url=project.url) }}"><strong>{{ project.name }}</strong></a>
+										<span>
+											by
+											{% for role in project.roles %} 
+	                                    		{% if role.role == "owner" %}
+	                                    			<a href="{{ url_for('main.user', url=role.user.url) }}">{{ role.user.name }}</a>
+	                                    		{% endif %}
+	                                		{% endfor %}
+										</span>
+										</h2>
+										<p class="desc">{{ project.description }}</p>
+									</div>
 								</div>
 							</div>
-							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-								<div class="thumbnail">
-									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">								
-									<h2>Crepe Cart Kick Start</h2>
-									<span>
-										by
-										Samantha Saliter Dwyer
-									</span>
-									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>
-								</div>
-							</div>
-							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-								<div class="thumbnail">
-									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">				
-									<h2>Crepe Cart Kick Start</h2>
-									<span>
-										by
-										Samantha Saliter Dwyer
-									</span>
-									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>								
-								</div>
-							</div>
-							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
-								<div class="thumbnail">
-									<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">					
-									<h2>Crepe Cart Kick Start</h2>
-									<span>
-										by
-										Samantha Saliter Dwyer
-									</span>
-									<p>We wanna make french pancake magic all around the town! If you want to experience delicious hot crepes from a cute cart- check it!</p>				
-								</div>
-							</div>
+							{% endfor %}
+							
 						</div>
 					</div>
 				</div>

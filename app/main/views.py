@@ -37,7 +37,8 @@ auth = HTTPBasicAuth()
 
 @main.route('/')
 def index():
-    return render_template("index.html")
+    projects = Project.query.all()
+    return render_template("index.html", projects=projects)
 
 
 def allowed_file(filename):
@@ -105,43 +106,59 @@ def before_request():
 
 
 @main.route('/login', methods=['GET', 'POST'])
-@main.route('/register', methods=['GET', 'POST'])
-def register():
+def login():
     if current_user is not None and current_user.is_authenticated():
         return redirect(url_for('main.index'))
     registerForm = RegisterForm(request.form, prefix="registerForm")
     loginForm = LoginForm(request.form, prefix="loginForm")
 
     # log in user
-    if request.method == 'POST' and loginForm.validate():
-        user = User.query.filter_by(email=loginForm.email.data).first()
-        if user and bcrypt.check_password_hash(user.passwd,
-                                               loginForm.passwd.data):
-            # the session can't be modified as it's signed,
-            # it's a safe place to store the user id
-            #session['user_id'] = user.id
-            login_user(user)
-            return redirect(request.args.get('next') or url_for('main.index'))
-        flash('Wrong email or password', 'error-message')
+    if request.method == 'POST':
+        if request.form['submit'] == 'login' and loginForm.validate():
+            user = User.query.filter_by(email=loginForm.email.data).first()
+            if user and bcrypt.check_password_hash(user.passwd,
+                                                   loginForm.passwd.data):
+                # the session can't be modified as it's signed,
+                # it's a safe place to store the user id
+                #session['user_id'] = user.id
+                login_user(user)
+                return redirect(
+                    request.args.get('next') or url_for('main.index'))
+            flash('Wrong email or password', 'error-message')
 
-    # register user
-    if request.method == 'POST' and registerForm.validate():
-
-        user = User(email=registerForm.email.data,
-                    passwd=bcrypt.generate_password_hash(
-                        registerForm.passwd.data),
-                    name=registerForm.name.data)
-        user.url = urllib.quote_plus(registerForm.name.data)
-        #user_url = user_make_url(registerForm.name.data)
-        # Insert the record in our database and commit it
-        db.session.add(user)
-        db.session.commit()
-
-        login_user(user)
-        return redirect(url_for('main.index'))
     return render_template('register.html',
-                           registerForm=registerForm,
-                           loginForm=loginForm)
+                           form="login",
+                           loginForm=loginForm,
+                           registerForm=registerForm)
+
+
+@main.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user is not None and current_user.is_authenticated():
+        return redirect(url_for('main.index'))
+    registerForm = RegisterForm(request.form, prefix="registerForm")
+    loginForm = LoginForm(request.form, prefix="loginForm")
+
+    if request.method == 'POST':
+        if request.form['submit'] == 'register' and registerForm.validate():
+
+            user = User(email=registerForm.email.data,
+                        passwd=bcrypt.generate_password_hash(
+                            registerForm.passwd.data),
+                        name=registerForm.name.data)
+            user.url = urllib.quote_plus(registerForm.name.data)
+            #user_url = user_make_url(registerForm.name.data)
+            # Insert the record in our database and commit it
+            db.session.add(user)
+            db.session.commit()
+
+            login_user(user)
+            return redirect(url_for('main.index'))
+
+    return render_template('register.html',
+                           form="signup",
+                           loginForm=loginForm,
+                           registerForm=registerForm)
 
 
 @main.route("/logout/")
@@ -171,9 +188,15 @@ def edit_user(url):
                            form=form, user=user)
 
 
-# Project Views
+# # Project Views
+# @main.route('/projects/', methods=['GET'])
+# def projects(url):
+#     projects = Project.query.all()
+#     return render_template("project.html", project=project)
+
+
 @main.route('/projects/<url>', methods=['GET'])
-def projects(url):
+def project(url):
     project = Project.query.filter_by(url=url).first()
     if project is None:
         return page_not_found(404)
@@ -199,7 +222,7 @@ def start():
         role.project = project
         db.session.commit()
 
-        return redirect(url_for('main.projects', url=project.url))
+        return redirect(url_for('main.project', url=project.url))
 
     return render_template('new_project.html', form=form)
 
