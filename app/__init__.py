@@ -38,7 +38,7 @@ manager.add_command('db', MigrateCommand)
 app.config.from_object('config')
 lm = LoginManager()
 lm.init_app(app)
-lm.login_view = 'main.signup'
+lm.login_view = 'main.login'
 lm.logout_view = 'main.logout'
 lm.login_message = u"Please log in to access this page."
 

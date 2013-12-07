@@ -7,7 +7,7 @@ from flask import Blueprint, request, render_template, flash,\
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
 
-from app import app, db, bcrypt, api
+from app import app, db, api
 from app.main.models import User, Project, Project_image
 
 

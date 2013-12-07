@@ -57,47 +57,12 @@ def upload_file():
     return 'file upload'
 
 
-@auth.get_password
-def get_password(username):
-    if username == 'test':
-        return 'test'
-    return None
-
-
-@auth.error_handler
-def unauthorized():
-    return make_response(jsonify({'message': 'Unauthorized access'}), 403)
-    # return 403 instead of 401 to prevent browsers from
-    # displaying the default auth dialog
-
-
 @main.route('/user/<url>', methods=['GET'])
 def user(url):
     user = User.query.filter_by(url=url).first()
     if user is None:
         return page_not_found(404)
     return render_template("user.html", user=user)
-
-
-# @main.route('/login', methods=['GET', 'POST'])
-# def login():
-#     """
-#     Login form
-#     """
-#     if current_user is not None and current_user.is_authenticated():
-#         return redirect(url_for('main.home'))
-#     form = LoginForm(request.form)
-#     # make sure data are valid, but doesn't validate password is right
-#     if request.method == 'POST' and form.validate():
-#         user = User.query.filter_by(email=form.email.data).first()
-#         if user and bcrypt.check_password_hash(user.passwd, form.passwd.data):
-#             # the session can't be modified as it's signed,
-#             # it's a safe place to store the user id
-#             #session['user_id'] = user.id
-#             login_user(user)
-#             return redirect(request.args.get('next') or url_for('main.index'))
-#         flash('Wrong email or password', 'error-message')
-#     return render_template("login.html", form=form)
 
 
 @main.before_request
