@@ -1,4 +1,4 @@
-var app = app || {};
+/*var app = app || {};
 
 $(function() {
     // var books = [
@@ -10,4 +10,4 @@ $(function() {
     // ];
 
     new app.LibraryView();
-});
+});*/

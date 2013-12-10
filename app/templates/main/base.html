@@ -34,8 +34,8 @@
                             <li><a href="{{ url_for('main.edit_user', url=g.user.url) }}">Edit profile</a></li>                        
                             <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
                         {% else %}
-                            <li><a href="{{ url_for('main.register') }}">Sign up</a></li>
-                            <li><a href="{{ url_for('main.register') }}">Log in</a></li>
+                            <li><a href="{{ url_for('main.signup') }}">Sign up</a></li>
+                            <li><a href="{{ url_for('main.login') }}">Log in</a></li>
                         {% endif %}
 
                     </ul>

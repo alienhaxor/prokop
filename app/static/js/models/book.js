@@ -5,7 +5,7 @@ app.Book = Backbone.Model.extend({
         coverImage: 'static/img/placeholder.png',
         fileField: false,
         name: 'No title',
-        info: 'Unknown',
+        desc: 'Unknown',
         releaseDate: 'Unknown',
     },
     parse: function(response){
