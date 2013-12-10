@@ -18,9 +18,13 @@
             </div>
             <div id="project_media">
                 <div class="row">
-                    <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
-                        <img src="{{url_for('static', filename='img/main/project_example.jpg') }}" class="img-responsive" alt="Responsive image" />
+                    <div id="project_video" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                        <div class="flex-video widescreen"><iframe src="http://player.vimeo.com/video/80973511" frameborder="0" allowfullscreen=""></iframe></div>
                     </div>
+
+                    <!-- <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                        <img src="{{url_for('static', filename='img/main/project_example.jpg') }}" class="img-responsive" alt="Responsive image" />
+                    </div> -->
                     <div id="project_buttons" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                         <ul class="list-group">
                             <li class="list-group-item">
@@ -39,8 +43,8 @@
                                 <p class="list-group-item-text">{{project.date_created.strftime('%d %b %Y')}}</p>
                             </li>
                         </ul>
-                        <a class="btn btn-primary btn-lg">Sign up</a>
-                        <a class="btn btn-danger btn-lg">Lead this project</a>
+                        <a class='btn btn-primary btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='worker') }}">Sign Up</a>
+                        <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='lead') }}">Lead This Project</a>
                     </div>
                 </div>
             </div>

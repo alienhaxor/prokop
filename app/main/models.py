@@ -79,7 +79,7 @@ class Project(db.Model):
     need = db.Column(db.String(2056))
     rewards = db.Column(db.String(512))
     picture_url = db.Column(db.String)
-    status = db.Column(db.String(64), default='Looking For People')
+    status = db.Column(db.String(64), default='1')
     date_created = db.Column(db.DateTime)
     images = db.relationship('Project_image', backref='project',
                              lazy='dynamic')

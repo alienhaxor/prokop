@@ -1,7 +1,7 @@
 import os, json, urllib
 
 from flask import Blueprint, request, render_template, flash,\
-    g, redirect, url_for, jsonify, make_response
+    g, redirect, url_for, jsonify, make_response, abort
 
 from flask.ext.login import login_user, logout_user,\
     current_user, login_required
@@ -145,6 +145,7 @@ def edit_user(url):
     if form.validate_on_submit():
         g.user.name = form.name.data
         g.user.location = form.location.data
+        g.user.description = form.description.data
         g.user.url = urllib.quote_plus(form.name.data)
         db.session.add(g.user)
         db.session.commit()
@@ -191,27 +192,51 @@ def start():
 
     return render_template('new_project.html', form=form)
 
-# manage project
 
-# @main.route('/projects/<projects>/manage', methods=['GET', 'POST'])
-# @login_required
-# def manage(projects):
-#     project = User.query.filter_by(url=projects).first()
-#     if project is None:
-#         return page_not_found(404)
-#     form = ProjectForm(obj=project)
-#     if form.validate_on_submit():
-#         g.project.name = form.name.data
-#         g.project.status = form.status.data
-#         g.project.description = form.description.data
-#         g.project.need = form.need.data
-#         g.project.rewards = form.rewards.data
-#         g.project.url = urllib.quote_plus(form.name.data)
-#         db.session.add(g.project)
-#         db.session.commit()
-#         return redirect(url_for('main.projects', name=g.project.name))
-#     return render_template('',
-#                            form=form, user=user)
+#manage project
+@main.route('/projects/<project>/manage', methods=['GET', 'POST'])
+@login_required
+def project_manage(project):
+    project = Project.query.filter_by(url=project).first()
+    for role in project.roles:
+        if role.role is "owner":
+            print 'HITLER', role.user.name
+            if g.user.id is not role.user.id:
+                return page_not_found(404)
+    if project is None:
+        return page_not_found(404)
+    form = ProjectForm(obj=project)
+    #form.status.data = project.status
+
+    if form.validate_on_submit():
+        project.name = form.name.data
+        project.status = form.status.data
+        project.description = form.description.data
+        project.need = form.need.data
+        project.rewards = form.rewards.data
+        project.url = urllib.quote_plus(form.name.data)
+        db.session.add(project)
+        db.session.commit()
+        return redirect(url_for('main.project', url=project.url))
+
+    return render_template('project_manage.html',
+                           form=form, project=project)
+
+
+#Sign up for project
+@main.route('/project/signup/<url>/<role>', methods=['GET', 'POST'])
+@login_required
+def project_signup(url, role):
+    project = Project.query.filter_by(url=url).first()
+    if not project:
+        abort(404)
+
+    role = Role(role=role, created_at=datetime.datetime.now())
+    db.session.add(role)
+    role.user = current_user
+    role.project = project
+    db.session.commit()
+    return 'success', 201
 
 
 @lm.user_loader
