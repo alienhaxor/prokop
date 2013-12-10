@@ -35,6 +35,7 @@ main = Blueprint('main', __name__, template_folder='../templates/main/')
 auth = HTTPBasicAuth()
 
 
+@main.route('/projects/')
 @main.route('/')
 def index():
     projects = Project.query.all()
@@ -56,6 +57,20 @@ def upload_file():
             return jsonify({"success": True})
     return 'file upload'
 
+#################
+# User Views
+#################
+
+
+@main.before_request
+def before_request():
+    g.user = current_user
+
+
+@lm.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
 
 @main.route('/user/<url>', methods=['GET'])
 def user(url):
@@ -63,11 +78,6 @@ def user(url):
     if user is None:
         return page_not_found(404)
     return render_template("user.html", user=user)
-
-
-@main.before_request
-def before_request():
-    g.user = current_user
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -79,16 +89,16 @@ def login():
 
     # log in user
     if request.method == 'POST':
-        if request.form['submit'] == 'login' and loginForm.validate():
+        if request.form['submit'] == 'login' \
+                and loginForm.validate_on_submit():
+
             user = User.query.filter_by(email=loginForm.email.data).first()
             if user and bcrypt.check_password_hash(user.passwd,
                                                    loginForm.passwd.data):
-                # the session can't be modified as it's signed,
-                # it's a safe place to store the user id
-                #session['user_id'] = user.id
+
                 login_user(user)
-                return redirect(
-                    request.args.get('next') or url_for('main.index'))
+                return redirect(request.args.get('next')
+                                or url_for('main.index'))
             flash('Wrong email or password', 'error-message')
 
     return render_template('register.html',
@@ -118,7 +128,8 @@ def signup():
             db.session.commit()
 
             login_user(user)
-            return redirect(url_for('main.index'))
+            return redirect(request.args.get('next')
+                            or url_for('main.index'))
 
     return render_template('register.html',
                            form="signup",
@@ -154,6 +165,20 @@ def edit_user(url):
                            form=form, user=user)
 
 
+#################
+# Project Views
+#################
+
+@main.route('/projects/<url>', methods=['GET'])
+def project(url):
+    project = Project.query.filter_by(url=url).first()
+    if project is None:
+        return page_not_found(404)
+    status_choices = dict(app.config['PROJECT_STATUS'])
+    return render_template("project.html", project=project,
+                           status_choices=status_choices)
+
+
 # # Project Views
 # @main.route('/projects/', methods=['GET'])
 # def projects(url):
@@ -161,23 +186,18 @@ def edit_user(url):
 #     return render_template("project.html", project=project)
 
 
-@main.route('/projects/<url>', methods=['GET'])
-def project(url):
-    project = Project.query.filter_by(url=url).first()
-    if project is None:
-        return page_not_found(404)
-    return render_template("project.html", project=project)
-
-
 @main.route('/start', methods=('GET', 'POST'))
 @login_required
 def start():
     form = ProjectForm(request.form)
-    if request.method == 'POST' and form.validate():
+    form.status.data = '1'
+    if request.method == 'POST' and form.validate_on_submit():
         project = Project(name=form.name.data,
                           description=form.description.data,
                           need=form.need.data,
-                          rewards=form.rewards.data)
+                          rewards=form.rewards.data,
+                          status='1'
+                          )
         project.url = urllib.quote_plus(form.name.data)
         db.session.add(project)
 
@@ -199,22 +219,24 @@ def start():
 def project_manage(project):
     project = Project.query.filter_by(url=project).first()
     for role in project.roles:
-        if role.role is "owner":
-            print 'HITLER', role.user.name
+        if role.role == 'owner':
             if g.user.id is not role.user.id:
+                # TODO: replace with 'not_authorized'
                 return page_not_found(404)
+
     if project is None:
         return page_not_found(404)
     form = ProjectForm(obj=project)
-    #form.status.data = project.status
 
     if form.validate_on_submit():
-        project.name = form.name.data
-        project.status = form.status.data
-        project.description = form.description.data
-        project.need = form.need.data
-        project.rewards = form.rewards.data
-        project.url = urllib.quote_plus(form.name.data)
+        project = Project(name=form.name.data,
+                          status=form.status.data,
+                          description=form.description.data,
+                          need=form.need.data,
+                          rewards=form.rewards.data,
+                          url=urllib.quote_plus(form.name.data)
+                          )
+
         db.session.add(project)
         db.session.commit()
         return redirect(url_for('main.project', url=project.url))
@@ -237,11 +259,6 @@ def project_signup(url, role):
     role.project = project
     db.session.commit()
     return 'success', 201
-
-
-@lm.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 # Errors #
 ##########

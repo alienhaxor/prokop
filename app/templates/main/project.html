@@ -29,7 +29,7 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Project status</h4>
-                                <p class="list-group-item-text">{{project.status}}</p>
+                                <p class="list-group-item-text">{{status_choices[project.status]}}</p>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">{{ project.roles|length }} People signed</h4>
@@ -43,8 +43,10 @@
                                 <p class="list-group-item-text">{{project.date_created.strftime('%d %b %Y')}}</p>
                             </li>
                         </ul>
-                        <a class='btn btn-primary btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='worker') }}">Sign Up</a>
-                        <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='lead') }}">Lead This Project</a>
+                        {% if project.status == '1' %}
+                            <a class='btn btn-primary btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='worker') }}">Sign Up</a>
+                            <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='lead') }}">Lead This Project</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -68,6 +70,7 @@
                             </div>
                         </div>
                         <div class="col-xs-12">
+
                             <div class="panel panel-info">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
                                     <div class="panel-heading">

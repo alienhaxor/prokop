@@ -8,7 +8,7 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from app.main.models import User, Project
 
 #from wtforms_alchemy import ModelForm
-from app import bcrypt
+from app import bcrypt, app
 
 
 class LoginForm(Form):
@@ -67,14 +67,10 @@ class UserForm(Form):
 
 
 class ProjectForm(Form):
-
-    AVAILABLE_CHOICES = [('1', 'Looking for People'),
-                         ('2', 'In Progress'),
-                         ('3', 'Finished')]
-
     name = TextField('Name')
     #url = TextField('name')
-    status = SelectField("Status", choices=AVAILABLE_CHOICES)
+    status = SelectField("Status", coerce=str,
+                         choices=app.config['PROJECT_STATUS'])
 
     description = TextAreaField('Description')
     need = TextAreaField('Need')

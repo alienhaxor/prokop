@@ -52,6 +52,13 @@ app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 
 toolbar = DebugToolbarExtension(app)
 
+
+PROJECT_STATUS = [('1', 'Looking for People'),
+                  ('2', 'In Progress'),
+                  ('3', 'Finished')]
+
+app.config['PROJECT_STATUS'] = PROJECT_STATUS
+
 from app.main import models, views, api
 from app.main.views import main
 
