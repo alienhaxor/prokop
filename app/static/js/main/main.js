@@ -16,16 +16,41 @@ $(function () {
 
     //project_manage user handling
     $('#project_members').on('click', '.col-xs-5 .no_padding .col-xs-3 .user_move_button', function () {
-        $removeStr = '<div class="col-xs-3"><a href="#" class="user_move_button btn btn-danger btn-block"><span class="glyphicon glyphicon-chevron-left"></span> Remove</a></div>';
-        $acceptStr = '<div class="col-xs-3"><a href="#" class="user_move_button btn btn-success">Accept <span class="glyphicon glyphicon-chevron-right"></span></a></div>';
+        $dataUrl = $(this).attr('data-url');
+        $removeStr = '<div class="col-xs-3"><button data-url="'+$dataUrl+'" class="remove_user user_move_button btn btn-danger btn-block"><span class="glyphicon glyphicon-chevron-left"></span> Remove</button></div>';
+        $acceptStr = '<div class="col-xs-3"><button data-url="'+$dataUrl+'" class="accept_user user_move_button btn btn-success">Accept <span class="glyphicon glyphicon-chevron-right"></span></button></div>';
         $userStr = $(this).parent().siblings('.col-xs-9').text();
         $userUrlStr = $(this).parent().siblings('.col-xs-9').find('a').attr('href');
+        
         if (($(this).closest('.col-xs-5').attr('id')) === 'signed_users') {
             //signed user, move this to #accepted_users 
+
+            var role = 'worker_confirmed'
+            $.ajax({
+                url: $dataUrl+role,
+                type: 'POST',
+                data: {submit:true}, // An object with the key 'submit' and value 'true;
+                success: function (result) {
+                  console.log(result);
+                }
+            });  
+
             $('#accepted_users').append('<div class="no_padding">' + $removeStr + '<div class="col-xs-9"><a href="'+ $userUrlStr +'" class="btn btn-default btn-block">' + $userStr + '</a></div></div>');
             $(this).parent().parent().remove();
+        
         } else if (($(this).closest('.col-xs-5').attr('id')) === 'accepted_users') {
             //accepted user, move this to #signed_users
+
+            var role = 'worker'
+            $.ajax({
+                url: $dataUrl+role,
+                type: 'POST',
+                data: {submit:true}, // An object with the key 'submit' and value 'true;
+                success: function (result) {
+                  console.log(result);
+                }
+            });
+
             $('#signed_users').append('<div class="no_padding"><div class="col-xs-9"><a href="'+ $userUrlStr +'" class="btn btn-default btn-block">' + $userStr + '</a></div>'+$acceptStr);
             $(this).parent().parent().remove();
         }
@@ -40,5 +65,20 @@ $(function () {
         $('#PMediaRadioTextInput1').attr('disabled', 'disabled');
         $('#PMediaRadioTextInput2').removeAttr('disabled');
     });
+
+
+    // $('.accept_user').click(function() { 
+    //     alert('asd');
+    //         // $.ajax({
+    //         //     url: 'controller/addBookmark',
+    //         //     type: 'POST',
+    //         //     data: {submit:true}, // An object with the key 'submit' and value 'true;
+    //         //     success: function (result) {
+    //         //       alert("Your bookmark has been saved");
+    //         //     }
+    //         // });  
+
+    // });
+
     
 });

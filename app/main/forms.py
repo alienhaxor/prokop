@@ -76,7 +76,12 @@ class ProjectForm(Form):
     need = TextAreaField('Need')
     rewards = TextAreaField('Rewards')
     student_points = TextField('Student points')
-    picture = TextField('textfield')
+    video_url = TextField('Video Url')
+    image_url = TextField('Image Url')
+    need_leader = RadioField('Project Leader',
+                             choices=[
+                                 ('1', 'I need a project leader'),
+                                 ('2', 'I\'m the project leader')])
 
     # def __init__(self, *args, **kwargs):
     #     Form.__init__(self, *args, **kwargs)

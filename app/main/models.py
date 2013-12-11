@@ -80,6 +80,9 @@ class Project(db.Model):
     rewards = db.Column(db.String(512))
     picture_url = db.Column(db.String)
     status = db.Column(db.String(64), default='1')
+    video_url = db.Column(db.String(512))
+    image_url = db.Column(db.String(512))
+    need_leader = db.Boolean(db.Boolean)
     date_created = db.Column(db.DateTime)
     images = db.relationship('Project_image', backref='project',
                              lazy='dynamic')

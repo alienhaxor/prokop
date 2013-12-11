@@ -246,17 +246,27 @@ def project_manage(project):
 
 
 #Sign up for project
-@main.route('/project/signup/<url>/<role>', methods=['GET', 'POST'])
+@main.route('/project/signup/<project_url>/<user_url>/<role>',
+            methods=['GET', 'POST'])
 @login_required
-def project_signup(url, role):
-    project = Project.query.filter_by(url=url).first()
+def project_signup(project_url, user_url, role):
+    project = Project.query.filter_by(url=project_url).first()
     if not project:
         abort(404)
+    user = User.query.filter_by(url=user_url).first()
+    if not user:
+        abort(404)
 
-    role = Role(role=role, created_at=datetime.datetime.now())
-    db.session.add(role)
-    role.user = current_user
-    role.project = project
+    userRole = Role.query.filter_by(user=user)\
+        .filter_by(project=project).first()
+    if userRole:
+        userRole.role = role
+    else:
+        userRole = Role(role=role, created_at=datetime.datetime.now())
+        userRole.user = current_user
+        userRole.project = project
+        db.session.add(userRole)
+
     db.session.commit()
     return 'success', 201
 

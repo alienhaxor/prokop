@@ -32,20 +32,13 @@
                                     {{ render_field(form.description, with_label=True, rows=10) }}
                                     {{ render_field(form.need, with_label=True, rows=10) }}
                                     {{ render_field(form.rewards, with_label=True, rows=10) }}
-                                    </dl>
-                                    
-                                    <div class="form-group">
-                                        <label class="col-sm-4 control-label">Project video <span class="tooltip_custom glyphicon glyphicon-info-sign" data-placement="bottom" data-toggle="tooltip" data-original-title="YouTube, Vimeo or other embed video urls only."></span></label>
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-4 control-label">Project picture <span class="tooltip_custom glyphicon glyphicon-info-sign" data-placement="bottom" data-toggle="tooltip" data-original-title="Picture url."></span></label>
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control" />
-                                        </div>
-                                    </div>
+                                    {{ render_field(form.video_url, with_label=True) }}
+                                    {{ render_field(form.image_url, with_label=True) }}
+                                    {{ render_field(form.need_leader, with_label=True) }}
+                                    </dl>                                    
+
+                                     <label class="col-sm-4 control-label">Project description <span class="tooltip_custom glyphicon glyphicon-info-sign" data-placement="bottom" data-toggle="tooltip" data-original-title="You can use html markup in the text to make it look better."></span></label>
+                                   
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Project leader needed?</label>
                                         <div class="col-sm-6">
@@ -79,7 +72,7 @@
                                     {% if role.role == 'worker' %}
                                         <div class="no_padding">
                                             <div class="col-xs-9"><a href="{{ url_for('main.user', url=role.user.name) }}" class="btn btn-default btn-block">{{role.user.name}}</a></div>
-                                            <div class="col-xs-3"><a href="#" class="user_move_button btn btn-success">Accept <span class="glyphicon glyphicon-chevron-right"></span></a></div>
+                                            <div class="col-xs-3"><button data-url="{{url_for('main.project_signup', project_url=project.url, user_url=role.user.url, role='') }}" class="accept_user user_move_button btn btn-success">Accept <span class="glyphicon glyphicon-chevron-right"></span></button></div>
                                         </div>
                                     {% endif %}
                                 {% endfor %}
@@ -90,7 +83,7 @@
                                 {% for role in project.roles %}
                                     {% if role.role == 'worker_confirmed' %}
                                         <div class="no_padding">
-                                            <div class="col-xs-3"><a href="#" class="user_move_button btn btn-danger btn-block"><span class="glyphicon glyphicon-chevron-left"></span> Remove</a></div>   
+                                            <div class="col-xs-3"><button data-url="{{url_for('main.project_signup', project_url=project.url, user_url=role.user.url, role='') }}" class="remove_user user_move_button btn btn-danger btn-block"><span class="glyphicon glyphicon-chevron-left"></span> Remove</button></div>   
                                             <div class="col-xs-9"><a href="{{ url_for('main.user', url=role.user.name) }}" class="btn btn-default btn-block">{{role.user.name}}</a></div>         
                                         </div>
                                     {% endif %}

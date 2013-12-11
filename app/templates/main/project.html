@@ -9,8 +9,10 @@
                         <h1 class="text-center">
                             {{project.name}}<br />
                             <small>By                        
-                            {% for role in project.roles %} 
-                                <a href="{{ url_for('main.user', url=role.user.name) }}">{{role.user.name}}</a>
+                            {% for role in project.roles %}
+                                {% if role.role == 'owner' %}
+                                    <a href="{{ url_for('main.user', url=role.user.name) }}">{{role.user.name}}</a>
+                                {% endif %}
                             {% endfor %}</small>
                         </h1>
                     </div>
@@ -19,7 +21,7 @@
             <div id="project_media">
                 <div class="row">
                     <div id="project_video" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
-                        <div class="flex-video widescreen"><iframe src="http://player.vimeo.com/video/80973511" frameborder="0" allowfullscreen=""></iframe></div>
+                        <div class="flex-video widescreen"><iframe src="//player.vimeo.com/video/81385340" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/81385340">Sharon Jones and the Dap-Kings "Retreat!"</a> from <a href="http://vimeo.com/user1846901">Lizzi Akana</a> on <a href="https://vimeo.com">Vimeo</a>.</p></div>
                     </div>
 
                     <!-- <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
@@ -34,8 +36,10 @@
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">{{ project.roles|length }} People signed</h4>
                                 <p class="list-group-item-text">
-                                {% for role in project.roles %} 
-                                    {{ role.user.name }}
+                                {% for role in project.roles %}
+                                    {% if 'confirmed' or 'owner' in role.role %}
+                                        <a href="{{ url_for('main.user', url=role.user.name) }}">{{role.user.name}}</a><br/>
+                                    {% endif %}
                                 {% endfor %}</p>
                             </li>
                             <li class="list-group-item">
@@ -44,9 +48,16 @@
                             </li>
                         </ul>
                         {% if project.status == '1' %}
-                            <a class='btn btn-primary btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='worker') }}">Sign Up</a>
-                            <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', url=project.url, role='lead') }}">Lead This Project</a>
+                            {% for user_project in current_user.projects %}
+                                {% if project.id == user_project.project.id %}
+                                    {% if user_project.role != 'owner' %}
+                                    <a class='btn btn-primary btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='worker') }}">Sign Up</a>
+                                    <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='lead') }}">Lead This Project</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
+
                     </div>
                 </div>
             </div>
