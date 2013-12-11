@@ -9,8 +9,10 @@
                         <h1 class="text-center">
                             {{project.name}}<br />
                             <small>By                        
-                            {% for role in project.roles %} 
-                                <a href="{{ url_for('main.user', url=role.user.name) }}">{{role.user.name}}</a>
+                            {% for role in project.roles %}
+                                {% if role.role == 'owner' %}
+                                    <a href="{{ url_for('main.user', url=role.user.name) }}">{{role.user.name}}</a>
+                                {% endif %}
                             {% endfor %}</small>
                         </h1>
                     </div>
@@ -18,20 +20,26 @@
             </div>
             <div id="project_media">
                 <div class="row">
-                    <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
-                        <img src="{{url_for('static', filename='img/main/project_example.jpg') }}" class="img-responsive" alt="Responsive image" />
+                    <div id="project_video" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                        <div class="flex-video widescreen">{{project.video_url|safe}}</div>
                     </div>
+
+                    <!-- <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                        <img src="{{url_for('static', filename='img/main/project_example.jpg') }}" class="img-responsive" alt="Responsive image" />
+                    </div> -->
                     <div id="project_buttons" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Project status</h4>
-                                <p class="list-group-item-text">{{project.status}}</p>
+                                <p class="list-group-item-text">{{status_choices[project.status]}}</p>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">{{ project.roles|length }} People signed</h4>
                                 <p class="list-group-item-text">
-                                {% for role in project.roles %} 
-                                    {{ role.user.name }}
+                                {% for role in project.roles %}
+                                    {% if 'confirmed' or 'owner' in role.role %}
+                                        <a href="{{ url_for('main.user', url=role.user.name) }}">{{role.user.name}}</a><br/>
+                                    {% endif %}
                                 {% endfor %}</p>
                             </li>
                             <li class="list-group-item">
@@ -39,8 +47,24 @@
                                 <p class="list-group-item-text">{{project.date_created.strftime('%d %b %Y')}}</p>
                             </li>
                         </ul>
-                        <a class="btn btn-primary btn-lg">Sign up</a>
-                        <a class="btn btn-danger btn-lg">Lead this project</a>
+                        {% if project.status == '1' %}
+                            {% if current_user.is_authenticated() %}
+                                {% if not applied %}                
+                                    <div class='project_apply_buttons'>
+                                        <button id='project_apply' class='btn btn-primary btn-lg' data-url="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='worker') }}">Sign Up</button>
+                                        <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='lead') }}">Lead This Project</a>
+                                    </div>
+                                {% elif applied %}
+                                    <h4>You have applied to this project!</h4>
+                                {% endif %}
+                            {% else %}
+                                <div class='project_apply_buttons'>
+                                    <a id='project_apply' class='btn btn-primary btn-lg' href="{{ url_for('main.login', next=project.url) }}">Sign Up</button>
+                                    <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='lead') }}">Lead This Project</a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -64,6 +88,7 @@
                             </div>
                         </div>
                         <div class="col-xs-12">
+
                             <div class="panel panel-info">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
                                     <div class="panel-heading">

@@ -13,8 +13,6 @@
 									<div class="container">
 										<div class="carousel-caption">
 											<h1>Get your projects done!</h1>
-											<p class="lead">Want to know how Prokop works?</p>
-											<a class="btn btn-large btn-primary" href="#">Learn more...</a>
 										</div>
 									</div>
 								</div>
@@ -22,9 +20,9 @@
 									<img src="{{url_for('static', filename='img/main/kuva4.jpg') }}" alt="">
 									<div class="container">
 										<div class="carousel-caption">
-											<h1>Sign up</h1>
-											<p class="lead">asdasdasdasdasd</p>
-											<a class="btn btn-large btn-primary" href="#">Learn more...</a>
+											<h1>Join Prokop</h1>
+											<p class="lead">Join a Project</p>
+											<a class="btn btn-large btn-primary" href="{{ url_for('main.signup') }}">Sign Up</a>
 										</div>
 									</div>
 								</div>
@@ -32,9 +30,8 @@
 									<img src="{{url_for('static', filename='img/main/kuva5.jpg') }}" alt="">
 									<div class="container">
 										<div class="carousel-caption">
-											<h1>asdasd</h1>
-											<p class="lead">asdasdasdasdasdasd</p>
-											<a class="btn btn-large btn-primary" href="#">Learn more...</a>
+											<h1>Start a Project</h1>
+											<a class="btn btn-large btn-primary" href="{{ url_for('main.start') }}">Start</a>
 										</div>
 									</div>
 								</div>
@@ -62,7 +59,7 @@
                                 </a>
                                 <div id="collapse1" class="panel-collapse collapse in">
                                     <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue eget purus eget vulputate. Nam rhoncus dui elit, id cursus mauris porttitor quis. Pellentesque ac fringilla turpis. Mauris pulvinar eleifend justo in fring
+                                        <p>Proko is a site where projects and students come together. The greatest advantage of Proko is that it helps to decrease everyone's workload: students can find projects to help with their studies, companies find people to do their projects and planning courses becomes easier for teachers. You don't need to be a student to use Proko. Everyone can join and create or sign up to do projects created by other people or companies.
 										</p>
                                     </div>
                                 </div>
@@ -76,12 +73,16 @@
 					<div class="col-md-12">
 						<h1>Projects</h1>
 						<div class="row">
-
+						{% if projects %}
 							{% for project in projects %}
 							<div class="project col-xs-6 col-sm-4 col-md-3 col-lg-3">
 								<div class="project-card">
 									<div class="thumbnail">
-										<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">
+										{% if project.image_url %}										
+											<img src="{{ project.image_url }}" class="img-responsive" alt="Responsive image">
+										{% else %}
+											<img src="{{url_for('static', filename='img/main/kuva.jpg') }}" class="img-responsive" alt="Responsive image">
+										{% endif %}
 										<h2 class="bbcard_name"><a href="{{ url_for('main.project', url=project.url) }}"><strong>{{ project.name }}</strong></a>
 										<span>
 											by
@@ -97,7 +98,7 @@
 								</div>
 							</div>
 							{% endfor %}
-							
+						{% endif %}
 						</div>
 					</div>
 				</div>

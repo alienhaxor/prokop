@@ -78,8 +78,10 @@ class Project(db.Model):
     description = db.Column(db.String(2056))
     need = db.Column(db.String(2056))
     rewards = db.Column(db.String(512))
-    picture_url = db.Column(db.String)
-    status = db.Column(db.String(64), default='Looking For People')
+    status = db.Column(db.String(64), default='1')
+    video_url = db.Column(db.String(512))
+    image_url = db.Column(db.String(512))
+    need_leader = db.Column(db.Boolean(), default=False)
     date_created = db.Column(db.DateTime)
     images = db.relationship('Project_image', backref='project',
                              lazy='dynamic')
@@ -88,17 +90,20 @@ class Project(db.Model):
     #users = db.relationship('Project', backref='project_role')
 
     def __init__(self, name=None, url=None, student_points=None,
-                 description=None, picture_url=None, status=None,
-                 date_created=None, need=None, rewards=None):
+                 description=None, image_url=None, video_url=None,
+                 status=None, date_created=None, need=None,
+                 rewards=None, need_leader=None):
         self.name = name
         self.url = url
         self.student_points = student_points
         self.description = description
-        self.picture_url = picture_url
+        self.image_url = image_url
+        self.video_url = video_url
         self.status = status
         self.date_created = datetime.datetime.now()
         self.need = need
         self.rewards = rewards
+        self.need_leader = need_leader
 
     @property
     def serialize(self):

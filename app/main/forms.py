@@ -1,14 +1,14 @@
 from flask.ext.wtf import Form
 
 from wtforms import TextField, BooleanField, TextAreaField,\
-    RadioField, PasswordField, DecimalField, form, fields, validators
+    RadioField, SelectField, PasswordField, DecimalField, form, fields, validators
 
 from wtforms.validators import Required, Email, EqualTo, Length
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from app.main.models import User, Project
 
 #from wtforms_alchemy import ModelForm
-from app import bcrypt
+from app import bcrypt, app
 
 
 class LoginForm(Form):
@@ -45,50 +45,56 @@ class UserForm(Form):
     email = TextField('email')
     location = TextField('location')
     description = TextAreaField('description',
-                                validators=[Length(min=0, max=140)])
+                                validators=[Length(min=0, max=2056)])
     passwd_old = fields.PasswordField('old password')
     passwd_new = fields.PasswordField('new password')
 
-    # def __init__(self, original_url, *args, **kwargs):
-    #     Form.__init__(self, *args, **kwargs)
-    #     self.original_url = original_url
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
 
-    # def validate(self):
-    #     if not Form.validate(self):
-    #         return False
-    #     if self.url.data == self.original_url:
-    #         return True
-    #     user_url = User.query.filter_by(url=self.url.data).first()
-    #     if user_url is not None:
-    #         self.url.errors.append(
-    #             'This url is already in use. Please choose another one.'
-    #         )
-    #         return False
-    #     return True
+    def validate(self):
+        if not Form.validate(self):
+            return False
+
+        user_url = User.query.filter_by(url=self.url.data).first()
+        if user_url:
+            self.url.errors.append(
+                'This url is already in use. Please choose another one.'
+            )
+            return False
+        else:
+            return True
 
 
 class ProjectForm(Form):
-    name = TextField('name')
-    status = TextField('status')
-    description = TextAreaField('description')
-    need = TextAreaField('need')
-    rewards = TextAreaField('rewards')
-    student_points = TextField('student_points')
-    picture = TextField('textfield')
+    name = TextField('Name')
+    #url = TextField('name')
+    status = SelectField("Status", coerce=str,
+                         choices=app.config['PROJECT_STATUS'])
 
-    # def __init__(self, original_url, *args, **kwargs):
+    description = TextAreaField('Description')
+    need = TextAreaField('Need')
+    rewards = TextAreaField('Rewards')
+    student_points = TextField('Student points')
+    video_url = TextField('Video Url')
+    image_url = TextField('Image Url')
+    need_leader = RadioField('Project Leader',
+                             choices=[
+                                 ('1', 'I need a project leader'),
+                                 ('2', 'I\'m the project leader')])
+
+    # def __init__(self, *args, **kwargs):
     #     Form.__init__(self, *args, **kwargs)
-    #     self.original_url = original_url
 
     # def validate(self):
     #     if not Form.validate(self):
     #         return False
-    #     if self.url.data == self.original_url:
-    #         return True
-    #     project_url = Project.query.filter_by(url=self.url.data).first()
-    #     if project_url is not None:
-    #         self.url.errors.append(
-    #             'This url is already in use. Please choose another one.'
-    #         )
-    #         return False
-    #     return True
+
+        # project_url = Project.query.filter_by(url=self.name.data).first()
+        # if project_url:
+        #     self.url.errors.append(
+        #         'This url is already in use. Please choose another one.'
+        #     )
+        #     return False
+        # else:
+        #     return True

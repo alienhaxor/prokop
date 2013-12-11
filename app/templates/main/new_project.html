@@ -18,13 +18,27 @@
                             {{ form.csrf_token }}
                             <dl>
                             {{ render_field(form.name, with_label=True) }}
-                            {{ render_field(form.description, with_label=True) }}
-                            {{ render_field(form.need, with_label=True) }}
-                            {{ render_field(form.rewards, with_label=True) }}
-                            </dl>
+                            {{ render_field(form.description, with_label=True, rows=10) }}
+                            {{ render_field(form.need, with_label=True, rows=10) }}
+                            {{ render_field(form.rewards, with_label=True, rows=10) }}
+                            {{ render_field(form.video_url, with_label=True) }}
+                            {{ render_field(form.image_url, with_label=True) }}
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Project leader needed?</label>                            
+                                <div class="col-sm-6">
+                                {% for subfield in form.need_leader %}
+                                    <div class="radio">
+                                        {{ subfield }}
+                                        {{ subfield.label }}
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            
                             <div class="col-sm-6 col-sm-offset-4">
                                 <button type="submit" name='submit' class="btn btn-primary" value="start">Start Project</button>
                             </div>
+                            
                         </form>           
                     </div>
                 </div>                                             

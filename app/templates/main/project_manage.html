@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="container" id="container">
+            <div id="page_title">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1 class="text-center page-header">{{project.name}} - Project management</h1>
+                    </div>
+                </div>
+            </div>
+            <div id="project_nav">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs nav-justified">
+                            <li class="active"><a href="#1" data-toggle="tab">Home</a></li>
+                            <li><a href="#2" data-toggle="tab">Members</a></li>
+                        </ul>
+                    </div>
+                </div>      
+            </div>
+            <div class="tab-content">
+                    <div id="1" class="tab-pane active">
+                        <div id="project_info">
+                            <div class="row">
+                                <form class='form-horizontal' method="POST" action="">
+                                    {% from "_formhelpers.html" import render_field %}
+                                    {{ form.csrf_token }}
+                                    <dl>
+                                    {{ render_field(form.name, with_label=True) }}
+                                    {{ render_field(form.status, with_label=True) }}
+                                    {{ render_field(form.description, with_label=True, rows=10) }}
+                                    {{ render_field(form.need, with_label=True, rows=10) }}
+                                    {{ render_field(form.rewards, with_label=True, rows=10) }}
+                                    {{ render_field(form.video_url, with_label=True) }}
+                                    {{ render_field(form.image_url, with_label=True) }}
+                                    {{ render_field(form.need_leader, with_label=True) }}
+                                    </dl>                                    
+
+                                     <label class="col-sm-4 control-label">Project description <span class="tooltip_custom glyphicon glyphicon-info-sign" data-placement="bottom" data-toggle="tooltip" data-original-title="You can use html markup in the text to make it look better."></span></label>
+                                   
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Project leader needed?</label>
+                                        <div class="col-sm-6">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsRadios2" id="PLeaderRadio1" value="option1" checked="checked" />
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsRadios2" id="PLeaderRadio2" value="option2" />
+                                                    No
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>        
+                                    <div class="col-sm-6 col-sm-offset-4">
+                                        <button type="submit" name='submit' class="btn btn-primary" value="start">Save</button>
+                                    </div>
+                                </form>              
+                            </div>
+                        </div>                 
+                    </div>
+                    <div id="2" class="tab-pane">
+                        <div id="project_members" class="row">
+                            <div id="signed_users" class="col-xs-5">
+                                <h3 class="page-header text-center">Signed users</h3>
+                                
+                                {% for role in project.roles %}
+                                    {% if role.role == 'worker' %}
+                                        <div class="no_padding">
+                                            <div class="col-xs-9"><a href="{{ url_for('main.user', url=role.user.name) }}" class="btn btn-default btn-block">{{role.user.name}}</a></div>
+                                            <div class="col-xs-3"><button data-url="{{url_for('main.project_signup', project_url=project.url, user_url=role.user.url, role='') }}" class="accept_user user_move_button btn btn-success">Accept <span class="glyphicon glyphicon-chevron-right"></span></button></div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+ 
+                            </div>
+                            <div id="accepted_users" class="col-xs-5 col-xs-offset-2">
+                                <h3 class="page-header text-center">Accepted members</h3>
+                                {% for role in project.roles %}
+                                    {% if role.role == 'worker_confirmed' %}
+                                        <div class="no_padding">
+                                            <div class="col-xs-3"><button data-url="{{url_for('main.project_signup', project_url=project.url, user_url=role.user.url, role='') }}" class="remove_user user_move_button btn btn-danger btn-block"><span class="glyphicon glyphicon-chevron-left"></span> Remove</button></div>   
+                                            <div class="col-xs-9"><a href="{{ url_for('main.user', url=role.user.name) }}" class="btn btn-default btn-block">{{role.user.name}}</a></div>         
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>                                             
+         </div>
+    </div>
+{% endblock %}
