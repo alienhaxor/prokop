@@ -175,8 +175,14 @@ def project(url):
     if project is None:
         return page_not_found(404)
     status_choices = dict(app.config['PROJECT_STATUS'])
+    applied = False
+    if current_user.is_authenticated():
+        role = Role.query.filter_by(user=g.user)\
+            .filter_by(project=project).first()
+        if role:
+            applied = True
     return render_template("project.html", project=project,
-                           status_choices=status_choices)
+                           status_choices=status_choices, applied=applied)
 
 
 # # Project Views
@@ -196,7 +202,9 @@ def start():
                           description=form.description.data,
                           need=form.need.data,
                           rewards=form.rewards.data,
-                          status='1'
+                          status='1',
+                          video_url=form.video_url.data,
+                          image_url=form.image_url.data
                           )
         project.url = urllib.quote_plus(form.name.data)
         db.session.add(project)

@@ -48,7 +48,11 @@
 
                         <div id="user_project1" class="user_project col-xs-6 col-sm-4 col-md-3 col-lg-3">
                             <div class="thumbnail">
-                                <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" alt="..." />
+                                {% if role.project.image_url %}                                      
+                                        <img src="{{ role.project.image_url }}" class="img-responsive" alt="Responsive image">
+                                    {% else %}
+                                        <img src="{{url_for('static', filename='img/main/300x200.jpg') }}" class="img-responsive" alt="Responsive image">
+                                {% endif %}
                                 <div class="caption">
                                     <h3>{{role.project.name}}</h3>
                                     <p>{{role.project.description}}</p>

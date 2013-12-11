@@ -67,18 +67,21 @@ $(function () {
     });
 
 
-    // $('.accept_user').click(function() { 
-    //     alert('asd');
-    //         // $.ajax({
-    //         //     url: 'controller/addBookmark',
-    //         //     type: 'POST',
-    //         //     data: {submit:true}, // An object with the key 'submit' and value 'true;
-    //         //     success: function (result) {
-    //         //       alert("Your bookmark has been saved");
-    //         //     }
-    //         // });  
+    $('#project_apply').click(function() {
+        var url = $(this).attr('data-url');
+        var message = 'You applied to the project! We will email you to let you know if you got accepted.'
+        console.log(url);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                //data: {submit:true}, // An object with the key 'submit' and value 'true;
+                success: function (result) {
+                    $('.project_apply_buttons').replaceWith('<div class="success">'+message+'/div>');
 
-    // });
+                }
+            });  
+
+    });
 
     
 });

@@ -21,7 +21,7 @@
             <div id="project_media">
                 <div class="row">
                     <div id="project_video" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
-                        <div class="flex-video widescreen"><iframe src="//player.vimeo.com/video/81385340" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/81385340">Sharon Jones and the Dap-Kings "Retreat!"</a> from <a href="http://vimeo.com/user1846901">Lizzi Akana</a> on <a href="https://vimeo.com">Vimeo</a>.</p></div>
+                        <div class="flex-video widescreen">{{project.video_url|safe}}</div>
                     </div>
 
                     <!-- <div id="project_picture" class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
@@ -48,14 +48,21 @@
                             </li>
                         </ul>
                         {% if project.status == '1' %}
-                            {% for user_project in current_user.projects %}
-                                {% if project.id == user_project.project.id %}
-                                    {% if user_project.role != 'owner' %}
-                                    <a class='btn btn-primary btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='worker') }}">Sign Up</a>
-                                    <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='lead') }}">Lead This Project</a>
-                                    {% endif %}
+                            {% if current_user.is_authenticated() %}
+                                {% if not applied %}                
+                                    <div class='project_apply_buttons'>
+                                        <button id='project_apply' class='btn btn-primary btn-lg' data-url="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='worker') }}">Sign Up</button>
+                                        <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='lead') }}">Lead This Project</a>
+                                    </div>
+                                {% elif applied %}
+                                    <h4>You have applied to this project!</h4>
                                 {% endif %}
-                            {% endfor %}
+                            {% else %}
+                                <div class='project_apply_buttons'>
+                                    <a id='project_apply' class='btn btn-primary btn-lg' href="{{ url_for('main.login', next=project.url) }}">Sign Up</button>
+                                    <a class='btn btn-danger btn-lg' href="{{ url_for('main.project_signup', project_url=project.url, user_url=current_user.url, role='lead') }}">Lead This Project</a>
+                                </div>
+                            {% endif %}
                         {% endif %}
 
                     </div>

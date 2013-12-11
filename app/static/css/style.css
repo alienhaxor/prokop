@@ -358,3 +358,8 @@ body {
     float: left;
     margin-right: 13px;
 }
+
+.btn {
+    margin-bottom:5px;
+    margin-top:5px;
+}
