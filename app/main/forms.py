@@ -68,7 +68,7 @@ class UserForm(Form):
 
 class ProjectForm(Form):
     name = TextField('Name')
-    #url = TextField('name')
+    url = TextField('name')
     status = SelectField("Status", coerce=str,
                          choices=app.config['PROJECT_STATUS'])
 
@@ -78,10 +78,6 @@ class ProjectForm(Form):
     student_points = TextField('Student points')
     video_url = TextField('Video Url')
     image_url = TextField('Image Url')
-    need_leader = RadioField('Project Leader',
-                             choices=[
-                                 ('1', 'I need a project leader'),
-                                 ('2', 'I\'m the project leader')])
 
     # def __init__(self, *args, **kwargs):
     #     Form.__init__(self, *args, **kwargs)
