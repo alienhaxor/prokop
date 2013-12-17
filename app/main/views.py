@@ -237,14 +237,13 @@ def project_manage(project):
     form = ProjectForm(obj=project)
 
     if form.validate_on_submit():
-        project = Project(name=form.name.data,
-                          status=form.status.data,
-                          description=form.description.data,
-                          need=form.need.data,
-                          rewards=form.rewards.data,
-                          url=urllib.quote_plus(form.name.data)
-                          )
-
+        project.name = form.name.data,
+        project.status = form.status.data,
+        project.description = form.description.data,
+        project.need = form.need.data,
+        project.rewards = form.rewards.data,
+        project.url = urllib.quote_plus(form.name.data)
+        
         db.session.add(project)
         db.session.commit()
         return redirect(url_for('main.project', url=project.url))
